@@ -40,6 +40,18 @@ function App() {
           </button>
 
           <button
+  className={
+    activePage === "Dashboard"
+      ? "nav-link active"
+      : "nav-link"
+  }
+  onClick={() => openPage("Dashboard")}
+>
+  Dashboard
+</button>
+  
+
+          <button
             className={
               activePage === "Features"
                 ? "nav-link active"
