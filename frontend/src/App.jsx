@@ -16,21 +16,24 @@ function App() {
     <div className="app">
 
       {/* ================= NAVBAR ================= */}
+
       <header className="navbar">
 
-        <div
+        <button
           className="logo-section"
           onClick={() => openPage("Home")}
         >
-          <div className="logo-icon">🎓</div>
+          <div className="logo-mark">
+            🎓
+          </div>
 
-          <div>
+          <div className="logo-text">
             <h2>EduNexus AI</h2>
             <p>Learn • Grow • Build Your Future</p>
           </div>
-        </div>
+        </button>
 
-        <nav>
+        <nav className="nav-menu">
 
           <button
             className={activePage === "Home" ? "nav-link active" : "nav-link"}
@@ -40,67 +43,35 @@ function App() {
           </button>
 
           <button
-  className={
-    activePage === "Dashboard"
-      ? "nav-link active"
-      : "nav-link"
-  }
-  onClick={() => openPage("Dashboard")}
->
-  Dashboard
-</button>
-  
-
-          <button
-            className={
-              activePage === "Features"
-                ? "nav-link active"
-                : "nav-link"
-            }
+            className={activePage === "Features" ? "nav-link active" : "nav-link"}
             onClick={() => openPage("Features")}
           >
             Features
           </button>
 
           <button
-            className={
-              activePage === "For Students"
-                ? "nav-link active"
-                : "nav-link"
-            }
-            onClick={() => openPage("For Students")}
+            className={activePage === "Students" ? "nav-link active" : "nav-link"}
+            onClick={() => openPage("Students")}
           >
             For Students
           </button>
 
           <button
-            className={
-              activePage === "For Colleges"
-                ? "nav-link active"
-                : "nav-link"
-            }
-            onClick={() => openPage("For Colleges")}
+            className={activePage === "Colleges" ? "nav-link active" : "nav-link"}
+            onClick={() => openPage("Colleges")}
           >
             For Colleges
           </button>
 
           <button
-            className={
-              activePage === "Pricing"
-                ? "nav-link active"
-                : "nav-link"
-            }
+            className={activePage === "Pricing" ? "nav-link active" : "nav-link"}
             onClick={() => openPage("Pricing")}
           >
             Pricing
           </button>
 
           <button
-            className={
-              activePage === "About"
-                ? "nav-link active"
-                : "nav-link"
-            }
+            className={activePage === "About" ? "nav-link active" : "nav-link"}
             onClick={() => openPage("About")}
           >
             About
@@ -108,18 +79,18 @@ function App() {
 
         </nav>
 
-        <div className="nav-buttons">
+        <div className="nav-actions">
 
           <button
-            className="login-btn"
+            className="login-button"
             onClick={() => openPage("Login")}
           >
             Login
           </button>
 
           <button
-            className="primary-btn"
-            onClick={() => openPage("Role selection")}
+            className="primary-button"
+            onClick={() => openPage("GetStarted")}
           >
             Get Started
           </button>
@@ -129,7 +100,7 @@ function App() {
       </header>
 
 
-      {/* ================= PAGE CONTENT ================= */}
+      {/* ================= PAGES ================= */}
 
       {activePage === "Home" && (
         <HomePage openPage={openPage} />
@@ -139,11 +110,11 @@ function App() {
         <FeaturesPage openPage={openPage} />
       )}
 
-      {activePage === "For Students" && (
+      {activePage === "Students" && (
         <StudentsPage openPage={openPage} />
       )}
 
-      {activePage === "For Colleges" && (
+      {activePage === "Colleges" && (
         <CollegesPage openPage={openPage} />
       )}
 
@@ -159,279 +130,9 @@ function App() {
         <LoginPage openPage={openPage} />
       )}
 
-      {activePage === "Get Started" && (
+      {activePage === "GetStarted" && (
         <GetStartedPage openPage={openPage} />
       )}
-
-      {activePage === "RoleSelection" && (
-  <section className="role-selection-page">
-    <div className="role-selection-container">
-
-      <h1>Select Your Role</h1>
-
-      <p>
-        Choose your role to continue to the appropriate login page.
-      </p>
-
-      <div className="role-cards">
-
-        <div className="role-card">
-          <div className="role-icon">🎓</div>
-
-          <h2>Student</h2>
-
-          <p>
-            Access courses, attendance, assignments,
-            results and learning resources.
-          </p>
-
-          <button
-            className="primary-btn"
-            onClick={() => openPage("StudentLogin")}
-          >
-            Student Login
-          </button>
-        </div>
-
-
-        <div className="role-card">
-          <div className="role-icon">👨‍🏫</div>
-
-          <h2>Faculty</h2>
-
-          <p>
-            Manage classes, attendance, assignments,
-            students and academic activities.
-          </p>
-
-          <button
-            className="primary-btn"
-            onClick={() => openPage("FacultyLogin")}
-          >
-            Faculty Login
-          </button>
-        </div>
-
-
-        <div className="role-card">
-          <div className="role-icon">👨‍💼</div>
-
-          <h2>Manager</h2>
-
-          <p>
-            Manage faculty, students, reports,
-            departments and ERP operations.
-          </p>
-
-          <button
-            className="primary-btn"
-            onClick={() => openPage("ManagerLogin")}
-          >
-            Manager Login
-          </button>
-        </div>
-
-      </div>
-
-      <button
-        className="secondary-btn"
-        onClick={() => openPage("Home")}
-      >
-        ← Back to Home
-      </button>
-
-    </div>
-  </section>
-)}
-
-{activePage === "StudentLogin" && (
-  <section className="login-page">
-
-    <div className="login-container">
-
-      <div className="login-icon">
-        🎓
-      </div>
-
-      <h1>Student Login</h1>
-
-      <p>Login to your EduNexus student account</p>
-
-      <form>
-
-        <label>Student ID / Email</label>
-
-        <input
-          type="text"
-          placeholder="Enter Student ID or Email"
-        />
-
-        <label>Password</label>
-
-        <input
-          type="password"
-          placeholder="Enter your password"
-        />
-
-        <div className="login-options">
-
-          <label>
-            <input type="checkbox" />
-            Remember me
-          </label>
-
-          <button type="button" className="forgot-btn">
-            Forgot Password?
-          </button>
-
-        </div>
-
-        <button
-          type="submit"
-          className="primary-btn login-btn"
-        >
-          Login
-        </button>
-
-      </form>
-
-      <button
-        className="back-link"
-        onClick={() => openPage("RoleSelection")}
-      >
-        ← Back to Role Selection
-      </button>
-
-    </div>
-
-  </section>
-)}
-
-{activePage === "FacultyLogin" && (
-  <section className="login-page">
-
-    <div className="login-container">
-
-      <div className="login-icon">
-        👨‍🏫
-      </div>
-
-      <h1>Faculty Login</h1>
-
-      <p>Login to your EduNexus faculty account</p>
-
-      <form>
-
-        <label>Faculty ID / Email</label>
-
-        <input
-          type="text"
-          placeholder="Enter Faculty ID or Email"
-        />
-
-        <label>Password</label>
-
-        <input
-          type="password"
-          placeholder="Enter your password"
-        />
-
-        <div className="login-options">
-
-          <label>
-            <input type="checkbox" />
-            Remember me
-          </label>
-
-          <button type="button" className="forgot-btn">
-            Forgot Password?
-          </button>
-
-        </div>
-
-        <button
-          type="submit"
-          className="primary-btn login-btn"
-        >
-          Login
-        </button>
-
-      </form>
-
-      <button
-        className="back-link"
-        onClick={() => openPage("RoleSelection")}
-      >
-        ← Back to Role Selection
-      </button>
-
-    </div>
-
-  </section>
-)}
-
-{activePage === "ManagerLogin" && (
-  <section className="login-page">
-
-    <div className="login-container">
-
-      <div className="login-icon">
-        👨‍💼
-      </div>
-
-      <h1>Manager Login</h1>
-
-      <p>Login to your EduNexus manager account</p>
-
-      <form>
-
-        <label>Manager ID / Email</label>
-
-        <input
-          type="text"
-          placeholder="Enter Manager ID or Email"
-        />
-
-        <label>Password</label>
-
-        <input
-          type="password"
-          placeholder="Enter your password"
-        />
-
-        <div className="login-options">
-
-          <label>
-            <input type="checkbox" />
-            Remember me
-          </label>
-
-          <button type="button" className="forgot-btn">
-            Forgot Password?
-          </button>
-
-        </div>
-
-        <button
-          type="submit"
-          className="primary-btn login-btn"
-        >
-          Login
-        </button>
-
-      </form>
-
-      <button
-        className="back-link"
-        onClick={() => openPage("RoleSelection")}
-      >
-        ← Back to Role Selection
-      </button>
-
-    </div>
-
-  </section>
-)} 
 
 
       {/* ================= FOOTER ================= */}
@@ -439,8 +140,10 @@ function App() {
       <footer className="footer">
 
         <div>
-          <strong>🎓 EduNexus AI</strong>
-          <p>Learn • Grow • Build Your Future</p>
+          <h3>🎓 EduNexus AI</h3>
+          <p>
+            Learn • Grow • Build Your Future
+          </p>
         </div>
 
         <div className="footer-links">
@@ -453,11 +156,11 @@ function App() {
             Features
           </button>
 
-          <button onClick={() => openPage("For Students")}>
+          <button onClick={() => openPage("Students")}>
             Students
           </button>
 
-          <button onClick={() => openPage("For Colleges")}>
+          <button onClick={() => openPage("Colleges")}>
             Colleges
           </button>
 
@@ -467,7 +170,9 @@ function App() {
 
         </div>
 
-        <p>© 2026 EduNexus AI. All rights reserved.</p>
+        <p>
+          © 2026 EduNexus AI. All rights reserved.
+        </p>
 
       </footer>
 
@@ -481,16 +186,17 @@ function App() {
 ===================================================== */
 
 function HomePage({ openPage }) {
-  return (
-    <>
 
-      {/* HERO */}
+  return (
+    <main>
+
+      {/* ================= HERO ================= */}
 
       <section className="hero">
 
         <div className="hero-content">
 
-          <div className="badge">
+          <div className="hero-badge">
             ✨ AI-Powered College ERP + Student Career Intelligence Platform
           </div>
 
@@ -500,228 +206,113 @@ function HomePage({ openPage }) {
             <span>Smarter with AI</span>
           </h1>
 
-          <p className="hero-text">
+          <p className="hero-description">
             EduNexus AI brings together academic management,
-            student & faculty operations, learning, and career
-            growth — all in one powerful platform.
+            student & faculty operations, learning, and career growth —
+            all in one powerful platform.
             <br />
             Powered by AI, designed for your success.
           </p>
 
-          <div className="hero-buttons">
+          <div className="hero-actions">
 
             <button
-              className="primary-btn large"
-              onClick={() => openPage("RoleSelection")}
+              className="hero-primary"
+              onClick={() => openPage("GetStarted")}
             >
-              Get Started Free →
+              Get Started Free
+              <span>→</span>
             </button>
 
             <button
-              className="demo-btn"
+              className="hero-secondary"
               onClick={() => openPage("Features")}
             >
-              ▶ Explore Features
+              <span>▶</span>
+              Watch Demo
             </button>
 
           </div>
 
-          <div className="trust-items">
+          <div className="trust-row">
 
-            <span>✓ Secure & Scalable</span>
+            <span>
+              ✓ Secure & Scalable
+            </span>
 
-            <span>✓ Role-Based Access</span>
+            <span>
+              ✓ Role-Based Access
+            </span>
 
-            <span>✓ Modern & Easy to Use</span>
-
-          </div>
-
-        </div>
-
-
-        {/* DASHBOARD PREVIEW */}
-
-        <div className="dashboard-preview">
-
-          <div className="dashboard-sidebar">
-
-            <h3>🎓 EduNexus AI</h3>
-
-            <div className="side-active">
-              ⌂ Dashboard
-            </div>
-
-            <div>▣ Academics</div>
-            <div>◉ Attendance</div>
-            <div>▤ Examinations</div>
-            <div>₹ Fees</div>
-            <div>📢 Notices & Events</div>
-            <div>✦ AI Assistant</div>
-            <div>💼 Career & Jobs</div>
-            <div>⚙ Settings</div>
-
-          </div>
-
-
-          <div className="dashboard-main">
-
-            <div className="dashboard-top">
-
-              <div>
-                <h3>Good Morning, Student 👋</h3>
-                <p>Keep learning, keep growing!</p>
-              </div>
-
-              <div className="search-box">
-                🔍 Search anything...
-              </div>
-
-            </div>
-
-
-            <div className="stats">
-
-              <div className="stat-card">
-                <span>🟢</span>
-                <p>Attendance</p>
-                <h2>92%</h2>
-              </div>
-
-              <div className="stat-card">
-                <span>🟣</span>
-                <p>Upcoming Exams</p>
-                <h2>3</h2>
-              </div>
-
-              <div className="stat-card">
-                <span>🟠</span>
-                <p>Pending Fees</p>
-                <h2>₹12,500</h2>
-              </div>
-
-              <div className="stat-card">
-                <span>🔵</span>
-                <p>Job Matches</p>
-                <h2>5</h2>
-              </div>
-
-            </div>
-
-
-            <div className="ai-card">
-
-              <div>
-
-                <h2>
-                  Your AI Career Assistant
-                </h2>
-
-                <p>
-                  Get personalized insights, resume tips,
-                  job matches and interview preparation —
-                  all in one place.
-                </p>
-
-                <button
-                  onClick={() => openPage("Features")}
-                >
-                  Explore AI Tools →
-                </button>
-
-              </div>
-
-              <div className="robot">
-                🤖
-              </div>
-
-            </div>
-
-
-            <h3 className="quick-title">
-              Quick Actions
-            </h3>
-
-            <div className="quick-actions">
-
-              <div>
-                📊
-                <p>View Attendance</p>
-              </div>
-
-              <div>
-                📚
-                <p>Access Notes</p>
-              </div>
-
-              <div>
-                📝
-                <p>Take Quiz</p>
-              </div>
-
-              <div>
-                🛡️
-                <p>Apply for Leave</p>
-              </div>
-
-            </div>
+            <span>
+              ✓ Modern & Easy to Use
+            </span>
 
           </div>
 
         </div>
+
+
+        {/* ================= DASHBOARD PREVIEW ================= */}
+
+        <DashboardPreview />
 
       </section>
 
 
-      {/* MANAGEMENT */}
+      {/* ================= MANAGEMENT ================= */}
 
-      <section className="management">
+      <section className="management-section">
 
-        <h2>
-          Complete College Management
-        </h2>
+        <div className="section-heading">
 
-        <p>
-          From administration to academics, everything you
-          need to manage your college efficiently.
-        </p>
+          <h2>
+            Complete College Management
+          </h2>
 
+          <p>
+            From administration to academics, everything you need
+            to manage your college efficiently.
+          </p>
+
+        </div>
 
         <div className="management-grid">
 
-          <Feature
+          <FeatureCard
             icon="👥"
             title="Student & Faculty Management"
             text="Maintain profiles, departments, roles and more."
           />
 
-          <Feature
+          <FeatureCard
             icon="📖"
             title="Academic Management"
-            text="Courses, syllabus, notes, assignments, classes and timetable."
+            text="Courses, syllabus, notes, assignments, classes & timetable."
           />
 
-          <Feature
+          <FeatureCard
             icon="📅"
             title="Attendance & Leave"
-            text="QR-based attendance, leave requests and approvals."
+            text="QR-based attendance, leave requests & approvals."
           />
 
-          <Feature
+          <FeatureCard
             icon="📢"
-            title="Notices & Events"
-            text="Targeted notices, events calendar and meetings."
+            title="Notices, Events & Meetings"
+            text="Targeted notices, event calendar and online meetings."
           />
 
-          <Feature
-            icon="📄"
-            title="Examinations"
+          <FeatureCard
+            icon="📝"
+            title="Examinations & Assessment"
             text="Question bank, auto grading, results and assessments."
           />
 
-          <Feature
+          <FeatureCard
             icon="💳"
             title="Fees & Payments"
-            text="Secure payments, receipts and fee tracking."
+            text="Secure online payments, receipts and fee tracking."
           />
 
         </div>
@@ -729,31 +320,34 @@ function HomePage({ openPage }) {
       </section>
 
 
-      {/* CAREER */}
+      {/* ================= AI CAREER ================= */}
 
-      <section className="career">
+      <section className="career-section">
 
-        <div className="career-intro">
+        <div className="career-introduction">
 
-          <div className="career-badge">
+          <span className="career-badge">
             AI & Career Intelligence
-          </div>
+          </span>
 
           <h2>
-            Build Skills. Get Hired.
+            Build Skills.
+            <br />
+            Get Hired.
           </h2>
 
           <p>
             Get AI-powered insights, optimize your resume,
             practice quizzes, prepare for interviews and
-            find the right job.
+            find the right job — all in one place.
           </p>
 
           <button
             className="career-button"
             onClick={() => openPage("Features")}
           >
-            Explore Career Tools →
+            Explore Career Tools
+            <span>→</span>
           </button>
 
         </div>
@@ -774,645 +368,254 @@ function HomePage({ openPage }) {
         <CareerCard
           icon="💼"
           title="Job Matching"
-          text="Discover relevant jobs and apply easily."
+          text="Discover relevant jobs from trusted sources and apply easily."
         />
 
         <CareerCard
-          icon="👥"
-          title="Interview Preparation"
-          text="Practice quizzes, mock interviews and build confidence."
+          icon="🎯"
+          title="Assessments & Interview Prep"
+          text="Practice quizzes, mock interviews and build your confidence."
         />
 
       </section>
-
-    </>
-  );
-}
-
-
-/* =====================================================
-   FEATURES PAGE
-===================================================== */
-
-function FeaturesPage({ openPage }) {
-  return (
-    <PageContainer
-      title="Powerful Features"
-      subtitle="Everything you need for smarter college management and career growth."
-    >
-
-      <div className="page-grid">
-
-        <Feature
-          icon="👥"
-          title="Student Management"
-          text="Manage student profiles, departments, courses and academic information."
-        />
-
-        <Feature
-          icon="👨‍🏫"
-          title="Faculty Management"
-          text="Manage faculty profiles, roles, departments and responsibilities."
-        />
-
-        <Feature
-          icon="📚"
-          title="Academic Management"
-          text="Manage courses, syllabus, assignments, notes, classes and timetables."
-        />
-
-        <Feature
-          icon="📊"
-          title="Attendance Management"
-          text="Track attendance and manage attendance records efficiently."
-        />
-
-        <Feature
-          icon="📝"
-          title="Examinations"
-          text="Create assessments, question banks, results and grading workflows."
-        />
-
-        <Feature
-          icon="💳"
-          title="Fees & Payments"
-          text="Track fees, payments, receipts and pending balances."
-        />
-
-        <Feature
-          icon="🤖"
-          title="AI Assistant"
-          text="Provide intelligent academic and career assistance to students."
-        />
-
-        <Feature
-          icon="📄"
-          title="Resume & ATS"
-          text="Optimize resumes and improve compatibility with job descriptions."
-        />
-
-        <Feature
-          icon="💼"
-          title="Job Matching"
-          text="Help students discover relevant career opportunities."
-        />
-
-        <Feature
-          icon="🎯"
-          title="Interview Preparation"
-          text="Practice interviews, quizzes and career preparation."
-        />
-
-      </div>
-
-      <div className="center-button">
-
-        <button
-          className="primary-btn large"
-          onClick={() => openPage("Get Started")}
-        >
-          Get Started →
-        </button>
-
-      </div>
-
-    </PageContainer>
-  );
-}
-
-
-/* =====================================================
-   STUDENTS PAGE
-===================================================== */
-
-function StudentsPage({ openPage }) {
-  return (
-    <PageContainer
-      title="For Students"
-      subtitle="Everything students need to learn, grow and prepare for their careers."
-    >
-
-      <div className="student-highlight">
-
-        <h2>
-          Your Complete Student Companion
-        </h2>
-
-        <p>
-          Manage your academics, attendance, exams, career
-          preparation and job opportunities from one place.
-        </p>
-
-      </div>
-
-
-      <div className="page-grid">
-
-        <Feature
-          icon="📚"
-          title="Academic Dashboard"
-          text="View courses, assignments, notes, timetable and academic progress."
-        />
-
-        <Feature
-          icon="📊"
-          title="Attendance"
-          text="Monitor attendance and stay updated with your academic participation."
-        />
-
-        <Feature
-          icon="📝"
-          title="Exams & Results"
-          text="View upcoming examinations, assessments and results."
-        />
-
-        <Feature
-          icon="💰"
-          title="Fee Management"
-          text="Check pending fees, payment history and receipts."
-        />
-
-        <Feature
-          icon="🤖"
-          title="AI Career Assistant"
-          text="Get personalized guidance for your career journey."
-        />
-
-        <Feature
-          icon="📄"
-          title="Resume Builder"
-          text="Build and optimize your professional resume."
-        />
-
-        <Feature
-          icon="💼"
-          title="Job Opportunities"
-          text="Find relevant jobs based on your skills and profile."
-        />
-
-        <Feature
-          icon="🎤"
-          title="Interview Preparation"
-          text="Practice interviews and improve your confidence."
-        />
-
-      </div>
-
-
-      <div className="center-button">
-
-        <button
-          className="primary-btn large"
-          onClick={() => openPage("Get Started")}
-        >
-          Start Your Journey →
-        </button>
-
-      </div>
-
-    </PageContainer>
-  );
-}
-
-
-/* =====================================================
-   COLLEGES PAGE
-===================================================== */
-
-function CollegesPage({ openPage }) {
-  return (
-    <PageContainer
-      title="For Colleges"
-      subtitle="A unified platform for administration, academics, faculty and student success."
-    >
-
-      <div className="page-grid">
-
-        <Feature
-          icon="🏫"
-          title="College Administration"
-          text="Manage students, faculty, departments and institutional operations."
-        />
-
-        <Feature
-          icon="📚"
-          title="Academic Operations"
-          text="Manage courses, classes, syllabus and academic schedules."
-        />
-
-        <Feature
-          icon="👨‍🏫"
-          title="Faculty Management"
-          text="Organize faculty profiles, responsibilities and academic activities."
-        />
-
-        <Feature
-          icon="📊"
-          title="Attendance"
-          text="Track attendance records and manage leave workflows."
-        />
-
-        <Feature
-          icon="📝"
-          title="Examinations"
-          text="Manage question banks, assessments, grading and results."
-        />
-
-        <Feature
-          icon="💳"
-          title="Finance"
-          text="Manage student fees, payments, receipts and financial tracking."
-        />
-
-        <Feature
-          icon="📢"
-          title="Notices & Events"
-          text="Share notices, events and important college announcements."
-        />
-
-        <Feature
-          icon="📈"
-          title="Analytics"
-          text="Get insights into student performance and institutional activities."
-        />
-
-      </div>
-
-
-      <div className="center-button">
-
-        <button
-          className="primary-btn large"
-          onClick={() => openPage("Get Started")}
-        >
-          Get Started →
-        </button>
-
-      </div>
-
-    </PageContainer>
-  );
-}
-
-
-/* =====================================================
-   PRICING PAGE
-===================================================== */
-
-function PricingPage({ openPage }) {
-  return (
-    <PageContainer
-      title="Simple & Flexible Pricing"
-      subtitle="Choose a plan that fits your needs."
-    >
-
-      <div className="pricing-grid">
-
-        <PricingCard
-          title="Free"
-          price="₹0"
-          description="For students getting started"
-          features={[
-            "Basic student dashboard",
-            "Academic tracking",
-            "Attendance tracking",
-            "Basic career tools"
-          ]}
-          button="Start Free"
-          openPage={openPage}
-        />
-
-        <PricingCard
-          title="Student Pro"
-          price="₹199"
-          description="For students who want more"
-          features={[
-            "AI career assistant",
-            "Resume optimization",
-            "Job matching",
-            "Interview preparation",
-            "Advanced analytics"
-          ]}
-          button="Choose Pro"
-          openPage={openPage}
-          featured
-        />
-
-        <PricingCard
-          title="College"
-          price="Custom"
-          description="For educational institutions"
-          features={[
-            "Student management",
-            "Faculty management",
-            "Academic management",
-            "Attendance",
-            "Examinations",
-            "Fees & payments"
-          ]}
-          button="Contact Us"
-          openPage={openPage}
-        />
-
-      </div>
-
-    </PageContainer>
-  );
-}
-
-
-/* =====================================================
-   ABOUT PAGE
-===================================================== */
-
-function AboutPage({ openPage }) {
-  return (
-    <PageContainer
-      title="About EduNexus AI"
-      subtitle="Empowering students and colleges through intelligent technology."
-    >
-
-      <div className="about-content">
-
-        <h2>
-          One Platform. Smarter Education.
-        </h2>
-
-        <p>
-          EduNexus AI is designed to bring academic management,
-          student services, faculty operations and career intelligence
-          together in one modern platform.
-        </p>
-
-        <p>
-          The platform aims to make college life easier for students
-          while helping institutions manage their academic and
-          administrative activities efficiently.
-        </p>
-
-
-        <div className="about-grid">
-
-          <div>
-            <h3>🎓 For Students</h3>
-            <p>
-              Learn, track progress, prepare for careers and discover
-              opportunities.
-            </p>
-          </div>
-
-          <div>
-            <h3>🏫 For Colleges</h3>
-            <p>
-              Manage academic and administrative operations from one
-              centralized system.
-            </p>
-          </div>
-
-          <div>
-            <h3>🤖 Powered by AI</h3>
-            <p>
-              Provide intelligent insights and personalized career
-              assistance.
-            </p>
-          </div>
-
-        </div>
-
-
-        <div className="center-button">
-
-          <button
-            className="primary-btn large"
-            onClick={() => openPage("Get Started")}
-          >
-            Get Started →
-          </button>
-
-        </div>
-
-      </div>
-
-    </PageContainer>
-  );
-}
-
-
-/* =====================================================
-   LOGIN PAGE
-===================================================== */
-function LoginPage({ openPage }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    setMessage("");
-    setLoading(true);
-
-    try {
-      const response = await fetch("http://localhost:5000/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        localStorage.setItem("user", JSON.stringify(data.user));
-
-        setMessage("Login successful!");
-
-        setTimeout(() => {
-          openPage("Dashboard");
-        }, 500);
-      } else {
-        setMessage(data.message || "Invalid email or password");
-      }
-    } catch (error) {
-      console.error(error);
-
-      setMessage(
-        "Unable to connect to the backend. Make sure the backend is running."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <PageContainer
-      title="Welcome Back"
-      subtitle="Login to your EduNexus AI account."
-    >
-      <div className="auth-box">
-        <h2>Login</h2>
-
-        <label>Email Address</label>
-
-        <input
-          type="email"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <label>Password</label>
-
-        <input
-          type="password"
-          placeholder="Enter your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <button
-          type="button"
-          className="primary-btn auth-button"
-          onClick={handleLogin}
-          disabled={loading}
-        >
-          {loading ? "Logging in..." : "Login"}
-        </button>
-
-        {message && (
-          <p className="auth-message">
-            {message}
-          </p>
-        )}
-
-        <p className="auth-text">
-          Don't have an account?
-        </p>
-
-        <button
-          className="text-button"
-          onClick={() => openPage("Get Started")}
-        >
-          Create an account
-        </button>
-      </div>
-    </PageContainer>
-  );
-}
-
-/* =====================================================
-   GET STARTED PAGE
-===================================================== */
-
-function GetStartedPage({ openPage }) {
-  return (
-    <PageContainer
-      title="Get Started with EduNexus AI"
-      subtitle="Create your account and begin your smarter college journey."
-    >
-
-      <div className="auth-box">
-
-        <h2>Create Account</h2>
-
-        <label>Full Name</label>
-
-        <input
-          type="text"
-          placeholder="Enter your full name"
-        />
-
-        <label>Email Address</label>
-
-        <input
-          type="email"
-          placeholder="Enter your email"
-        />
-
-        <label>Password</label>
-
-        <input
-          type="password"
-          placeholder="Create a password"
-        />
-
-        <label>Role</label>
-
-        <select>
-
-          <option>Student</option>
-          <option>Faculty</option>
-          <option>Admin</option>
-
-        </select>
-
-        <button
-          className="primary-btn auth-button"
-        >
-          Create Account
-        </button>
-
-        <p className="auth-text">
-          Already have an account?
-        </p>
-
-        <button
-          className="text-button"
-          onClick={() => openPage("Login")}
-        >
-          Login here
-        </button>
-
-      </div>
-
-    </PageContainer>
-  );
-}
-
-
-/* =====================================================
-   REUSABLE COMPONENTS
-===================================================== */
-
-function PageContainer({ title, subtitle, children }) {
-  return (
-    <main className="inner-page">
-
-      <div className="page-header">
-
-        <div className="badge">
-          EduNexus AI
-        </div>
-
-        <h1>{title}</h1>
-
-        <p>{subtitle}</p>
-
-      </div>
-
-      {children}
 
     </main>
   );
 }
 
 
-function Feature({ icon, title, text }) {
+/* =====================================================
+   DASHBOARD PREVIEW
+===================================================== */
+
+function DashboardPreview() {
+
   return (
-    <div className="feature">
+    <div className="dashboard-wrapper">
+
+      <div className="dashboard-window">
+
+        {/* SIDEBAR */}
+
+        <aside className="dashboard-sidebar">
+
+          <div className="dashboard-brand">
+            🎓 EduNexus AI
+          </div>
+
+          <div className="sidebar-item active">
+            🏠 Dashboard
+          </div>
+
+          <div className="sidebar-item">
+            📚 Academics
+          </div>
+
+          <div className="sidebar-item">
+            ✓ Attendance
+          </div>
+
+          <div className="sidebar-item">
+            📝 Examinations
+          </div>
+
+          <div className="sidebar-item">
+            💰 Fees
+          </div>
+
+          <div className="sidebar-item">
+            📢 Notices & Events
+          </div>
+
+          <div className="sidebar-item">
+            🤖 AI Assistant
+          </div>
+
+          <div className="sidebar-item">
+            💼 Career & Jobs
+          </div>
+
+          <div className="sidebar-item">
+            ⚙ Settings
+          </div>
+
+        </aside>
+
+
+        {/* MAIN DASHBOARD */}
+
+        <div className="dashboard-main">
+
+          <div className="dashboard-header">
+
+            <div>
+              <h3>
+                Good Morning, Students 👋
+              </h3>
+
+              <p>
+                Keep learning, keep growing!
+              </p>
+            </div>
+
+            <div className="dashboard-search">
+              🔍 Search anything...
+            </div>
+
+          </div>
+
+
+          <div className="dashboard-stats">
+
+            <StatCard
+              icon="🟢"
+              title="Attendance"
+              value="92%"
+            />
+
+            <StatCard
+              icon="🟣"
+              title="Upcoming Exams"
+              value="3"
+            />
+
+            <StatCard
+              icon="🟠"
+              title="Pending Fees"
+              value="₹12,500"
+            />
+
+            <StatCard
+              icon="🔵"
+              title="Job Matches"
+              value="5"
+            />
+
+          </div>
+
+
+          {/* AI CARD */}
+
+          <div className="ai-dashboard-card">
+
+            <div>
+
+              <h2>
+                Your AI Career Assistant
+              </h2>
+
+              <p>
+                Get personalized insights, resume tips,
+                job matches and interview preparation —
+                all in one place.
+              </p>
+
+              <button>
+                Chat with AI →
+              </button>
+
+            </div>
+
+            <div className="robot">
+              🤖
+            </div>
+
+          </div>
+
+
+          <h3 className="quick-heading">
+            Quick Actions
+          </h3>
+
+          <div className="quick-actions">
+
+            <QuickAction
+              icon="📊"
+              text="View Attendance"
+            />
+
+            <QuickAction
+              icon="📚"
+              text="Access Notes"
+            />
+
+            <QuickAction
+              icon="📝"
+              text="Take Quiz"
+            />
+
+            <QuickAction
+              icon="🛡️"
+              text="Apply for Leave"
+            />
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  );
+}
+
+
+/* =====================================================
+   COMPONENTS
+===================================================== */
+
+function StatCard({ icon, title, value }) {
+
+  return (
+    <div className="stat-card">
+
+      <span className="stat-icon">
+        {icon}
+      </span>
+
+      <p>{title}</p>
+
+      <strong>{value}</strong>
+
+    </div>
+  );
+}
+
+
+function QuickAction({ icon, text }) {
+
+  return (
+    <div className="quick-action">
+
+      <span>
+        {icon}
+      </span>
+
+      <p>
+        {text}
+      </p>
+
+    </div>
+  );
+}
+
+
+function FeatureCard({ icon, title, text }) {
+
+  return (
+    <div className="feature-card">
 
       <div className="feature-icon">
         {icon}
       </div>
 
-      <h3>{title}</h3>
+      <h3>
+        {title}
+      </h3>
 
-      <p>{text}</p>
+      <p>
+        {text}
+      </p>
 
     </div>
   );
@@ -1420,6 +623,7 @@ function Feature({ icon, title, text }) {
 
 
 function CareerCard({ icon, title, text }) {
+
   return (
     <div className="career-card">
 
@@ -1427,70 +631,519 @@ function CareerCard({ icon, title, text }) {
         {icon}
       </div>
 
-      <h3>{title}</h3>
+      <h3>
+        {title}
+      </h3>
 
-      <p>{text}</p>
+      <p>
+        {text}
+      </p>
 
     </div>
   );
 }
 
 
-function PricingCard({
-  title,
-  price,
-  description,
-  features,
-  button,
-  openPage,
-  featured
-}) {
+/* =====================================================
+   OTHER PAGES
+===================================================== */
+
+function PageLayout({ title, subtitle, children }) {
+
   return (
-    <div
-      className={
-        featured
-          ? "pricing-card featured"
-          : "pricing-card"
-      }
+    <main className="inner-page">
+
+      <section className="page-hero">
+
+        <span className="hero-badge">
+          EduNexus AI
+        </span>
+
+        <h1>{title}</h1>
+
+        <p>
+          {subtitle}
+        </p>
+
+      </section>
+
+      <section className="page-content">
+        {children}
+      </section>
+
+    </main>
+  );
+}
+
+
+function FeaturesPage({ openPage }) {
+
+  return (
+    <PageLayout
+      title="Powerful Features"
+      subtitle="Everything you need for smarter college management and career growth."
     >
 
-      {featured && (
-        <div className="popular">
-          MOST POPULAR
-        </div>
-      )}
+      <div className="large-feature-grid">
 
-      <h2>{title}</h2>
+        <FeatureCard
+          icon="👥"
+          title="Student Management"
+          text="Manage student profiles, departments and academic information."
+        />
 
-      <div className="price">
-        {price}
-        {price !== "Custom" && (
-          <span>/month</span>
-        )}
+        <FeatureCard
+          icon="👨‍🏫"
+          title="Faculty Management"
+          text="Manage faculty profiles, departments and responsibilities."
+        />
+
+        <FeatureCard
+          icon="📚"
+          title="Academic Management"
+          text="Manage courses, syllabus, assignments, notes and timetables."
+        />
+
+        <FeatureCard
+          icon="📊"
+          title="Attendance Management"
+          text="Track attendance and manage attendance records efficiently."
+        />
+
+        <FeatureCard
+          icon="📝"
+          title="Examinations"
+          text="Create assessments, question banks, results and grading workflows."
+        />
+
+        <FeatureCard
+          icon="💳"
+          title="Fees & Payments"
+          text="Track fees, payments, receipts and pending balances."
+        />
+
+        <FeatureCard
+          icon="🤖"
+          title="AI Assistant"
+          text="Provide intelligent academic and career assistance."
+        />
+
+        <FeatureCard
+          icon="📄"
+          title="Resume & ATS"
+          text="Optimize resumes and improve compatibility with job descriptions."
+        />
+
+        <FeatureCard
+          icon="💼"
+          title="Job Matching"
+          text="Help students discover relevant career opportunities."
+        />
+
       </div>
 
-      <p>{description}</p>
-
-      <ul>
-
-        {features.map((feature, index) => (
-          <li key={index}>
-            ✓ {feature}
-          </li>
-        ))}
-
-      </ul>
-
       <button
-        className="primary-btn pricing-button"
-        onClick={() => openPage("Get Started")}
+        className="page-primary-button"
+        onClick={() => openPage("GetStarted")}
       >
-        {button}
+        Get Started →
       </button>
 
-    </div>
+    </PageLayout>
   );
 }
 
+
+function StudentsPage({ openPage }) {
+
+  return (
+    <PageLayout
+      title="For Students"
+      subtitle="Everything students need to learn, grow and prepare for their careers."
+    >
+
+      <div className="large-feature-grid">
+
+        <FeatureCard
+          icon="📚"
+          title="Academic Dashboard"
+          text="View courses, assignments, notes, timetable and progress."
+        />
+
+        <FeatureCard
+          icon="📊"
+          title="Attendance"
+          text="Monitor attendance and stay updated with academic participation."
+        />
+
+        <FeatureCard
+          icon="📝"
+          title="Exams & Results"
+          text="View upcoming examinations, assessments and results."
+        />
+
+        <FeatureCard
+          icon="💰"
+          title="Fee Management"
+          text="Check pending fees, payment history and receipts."
+        />
+
+        <FeatureCard
+          icon="🤖"
+          title="AI Career Assistant"
+          text="Get personalized guidance for your career journey."
+        />
+
+        <FeatureCard
+          icon="📄"
+          title="Resume Builder"
+          text="Build and optimize your professional resume."
+        />
+
+        <FeatureCard
+          icon="💼"
+          title="Job Opportunities"
+          text="Find relevant jobs based on your skills and profile."
+        />
+
+        <FeatureCard
+          icon="🎤"
+          title="Interview Preparation"
+          text="Practice interviews and improve your confidence."
+        />
+
+      </div>
+
+      <button
+        className="page-primary-button"
+        onClick={() => openPage("GetStarted")}
+      >
+        Start Your Journey →
+      </button>
+
+    </PageLayout>
+  );
+}
+
+
+function CollegesPage({ openPage }) {
+
+  return (
+    <PageLayout
+      title="For Colleges"
+      subtitle="A unified platform for administration, academics, faculty and student success."
+    >
+
+      <div className="large-feature-grid">
+
+        <FeatureCard
+          icon="🏫"
+          title="College Administration"
+          text="Manage students, faculty, departments and institutional operations."
+        />
+
+        <FeatureCard
+          icon="📚"
+          title="Academic Operations"
+          text="Manage courses, classes, syllabus and academic schedules."
+        />
+
+        <FeatureCard
+          icon="👨‍🏫"
+          title="Faculty Management"
+          text="Organize faculty profiles and academic responsibilities."
+        />
+
+        <FeatureCard
+          icon="📊"
+          title="Attendance"
+          text="Track attendance records and manage leave workflows."
+        />
+
+        <FeatureCard
+          icon="📝"
+          title="Examinations"
+          text="Manage examinations, assessments and results."
+        />
+
+        <FeatureCard
+          icon="💰"
+          title="Fees"
+          text="Track payments, receipts and fee collection."
+        />
+
+      </div>
+
+      <button
+        className="page-primary-button"
+        onClick={() => openPage("GetStarted")}
+      >
+        Get Started →
+      </button>
+
+    </PageLayout>
+  );
+}
+
+
+function PricingPage() {
+
+  return (
+    <PageLayout
+      title="Simple & Transparent Pricing"
+      subtitle="Choose the plan that fits your institution and student community."
+    >
+
+      <div className="pricing-grid">
+
+        <div className="pricing-card">
+
+          <h2>Starter</h2>
+
+          <div className="price">
+            Free
+          </div>
+
+          <p>
+            Perfect for exploring EduNexus AI.
+          </p>
+
+          <ul>
+            <li>✓ Basic student management</li>
+            <li>✓ Academic dashboard</li>
+            <li>✓ Attendance</li>
+            <li>✓ Basic AI tools</li>
+          </ul>
+
+          <button className="page-primary-button">
+            Get Started
+          </button>
+
+        </div>
+
+
+        <div className="pricing-card popular">
+
+          <span className="popular-badge">
+            MOST POPULAR
+          </span>
+
+          <h2>Professional</h2>
+
+          <div className="price">
+            ₹999
+            <small>/month</small>
+          </div>
+
+          <p>
+            For growing colleges and institutions.
+          </p>
+
+          <ul>
+            <li>✓ Complete ERP</li>
+            <li>✓ AI Assistant</li>
+            <li>✓ Career Intelligence</li>
+            <li>✓ Advanced Analytics</li>
+          </ul>
+
+          <button className="page-primary-button">
+            Choose Professional
+          </button>
+
+        </div>
+
+
+        <div className="pricing-card">
+
+          <h2>Enterprise</h2>
+
+          <div className="price">
+            Custom
+          </div>
+
+          <p>
+            Designed for large institutions.
+          </p>
+
+          <ul>
+            <li>✓ Unlimited users</li>
+            <li>✓ Custom integrations</li>
+            <li>✓ Advanced security</li>
+            <li>✓ Dedicated support</li>
+          </ul>
+
+          <button className="page-primary-button">
+            Contact Us
+          </button>
+
+        </div>
+
+      </div>
+
+    </PageLayout>
+  );
+}
+
+
+function AboutPage() {
+
+  return (
+    <PageLayout
+      title="About EduNexus AI"
+      subtitle="Technology designed to simplify education and empower student success."
+    >
+
+      <div className="about-card">
+
+        <h2>
+          One Platform. One Connected Campus.
+        </h2>
+
+        <p>
+          EduNexus AI is designed to bring academic management,
+          administration, student services and career intelligence
+          together in one modern platform.
+        </p>
+
+        <p>
+          Our goal is simple: reduce administrative complexity,
+          improve student experiences and use artificial intelligence
+          to help students prepare for the future.
+        </p>
+
+      </div>
+
+    </PageLayout>
+  );
+}
+
+
+function LoginPage({ openPage }) {
+
+  return (
+    <main className="auth-page">
+
+      <div className="auth-card">
+
+        <div className="auth-logo">
+          🎓
+        </div>
+
+        <h1>
+          Welcome Back
+        </h1>
+
+        <p>
+          Login to your EduNexus AI account
+        </p>
+
+        <form>
+
+          <label>
+            Email Address
+          </label>
+
+          <input
+            type="email"
+            placeholder="Enter your email"
+          />
+
+          <label>
+            Password
+          </label>
+
+          <input
+            type="password"
+            placeholder="Enter your password"
+          />
+
+          <button
+            type="submit"
+            className="page-primary-button full"
+          >
+            Login
+          </button>
+
+        </form>
+
+        <button
+          className="back-button"
+          onClick={() => openPage("Home")}
+        >
+          ← Back to Home
+        </button>
+
+      </div>
+
+    </main>
+  );
+}
+
+
+function GetStartedPage({ openPage }) {
+
+  return (
+    <main className="auth-page">
+
+      <div className="get-started-card">
+
+        <div className="auth-logo">
+          🚀
+        </div>
+
+        <h1>
+          Start Your EduNexus Journey
+        </h1>
+
+        <p>
+          Choose how you want to use EduNexus AI.
+        </p>
+
+        <div className="role-grid">
+
+          <button
+            onClick={() => openPage("Login")}
+          >
+            <span>🎓</span>
+            <strong>Student</strong>
+            <small>
+              Learn, track progress and build your career.
+            </small>
+          </button>
+
+          <button
+            onClick={() => openPage("Login")}
+          >
+            <span>👨‍🏫</span>
+            <strong>Faculty</strong>
+            <small>
+              Manage classes, students and academics.
+            </small>
+          </button>
+
+          <button
+            onClick={() => openPage("Login")}
+          >
+            <span>🏢</span>
+            <strong>College</strong>
+            <small>
+              Manage your complete institution.
+            </small>
+          </button>
+
+        </div>
+
+        <button
+          className="back-button"
+          onClick={() => openPage("Home")}
+        >
+          ← Back to Home
+        </button>
+
+      </div>
+
+    </main>
+  );
+}
 
 export default App;
