@@ -1,107 +1,103 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv");
-
-dotenv.config();
+const rateLimit = require("express-rate-limit");
 
 const app = express();
 
-app.use(cors());
 
+// ==========================================
+// CORS
+// ==========================================
 
-app.use(express.json());
-
-app.post("/api/login", (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({
-      success: false,
-      message: "Email and password are required"
-    });
-  }
-
-  if (email === "admin@edunexus.com" && password === "123456") {
-    return res.json({
-      success: true,
-      message: "Login successful",
-      user: {
-        name: "EduNexus Admin",
-        email: email,
-        role: "admin"
-      }
-    });
-  }
-
-  return res.status(401).json({
-    success: false,
-    message: "Invalid email or password"
-  });
-});
-
-
-const PORT = process.env.PORT || 5000;
-
-// Middleware
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: process.env.FRONTEND_URL || "http://localhost:5174",
     credentials: true,
   })
 );
 
 
+// ==========================================
+// JSON BODY PARSER
+// ==========================================
+
+app.use(express.json());
+
+
+// ==========================================
+// URL ENCODED DATA
+// ==========================================
 
 app.use(express.urlencoded({ extended: true }));
 
-// Test route
+
+// ==========================================
+// RATE LIMITING
+// ==========================================
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+
+  standardHeaders: true,
+  legacyHeaders: false,
+
+  message: {
+    success: false,
+    message: "Too many requests. Please try again later.",
+  },
+});
+
+app.use("/api", apiLimiter);
+
+
+// ==========================================
+// ROOT ROUTE
+// ==========================================
+
 app.get("/", (req, res) => {
   res.json({
     success: true,
-    message: "Welcome to EduNexus AI ERP API",
-    version: "1.0.0",
+    message: "EduNexus AI ERP backend is running.",
   });
 });
 
-// Health check
+
+// ==========================================
+// HEALTH CHECK API
+// ==========================================
+
 app.get("/api/health", (req, res) => {
   res.json({
     success: true,
-    message: "EduNexus AI backend is running",
-    status: "healthy",
+    message: "EduNexus AI ERP backend is healthy.",
+    status: "OK",
   });
 });
 
-app.post("/api/login", (req, res) => {
-  const { email, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({
-      success: false,
-      message: "Email and password are required"
-    });
-  }
+// ==========================================
+// 404 ROUTE
+// ==========================================
 
-  // Temporary login test
-  if (email === "admin@edunexus.com" && password === "123456") {
-    return res.json({
-      success: true,
-      message: "Login successful",
-      user: {
-        name: "EduNexus Admin",
-        email: email,
-        role: "admin"
-      }
-    });
-  }
-
-  return res.status(401).json({
+app.use((req, res) => {
+  res.status(404).json({
     success: false,
-    message: "Invalid email or password"
+    message: "API route not found.",
   });
 });
 
-// Start server
+
+// ==========================================
+// START SERVER
+// ==========================================
+
+const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
-  console.log(`EduNexus AI Backend running on http://localhost:${PORT}`);
+  console.log(
+    `EduNexus AI ERP backend running on http://localhost:${PORT}`
+  );
 });

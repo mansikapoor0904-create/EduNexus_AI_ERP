@@ -1,0 +1,171 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  width: 100%;
+
+  background: rgba(247, 245, 239, 0.96);
+  border-bottom: 1px solid #dedbd1;
+
+  backdrop-filter: blur(12px);
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  min-height: 76px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 24px;
+}
+
+/* BRAND */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  text-decoration: none;
+  color: #29352d;
+}
+
+.brand-icon {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: #66745f;
+  color: #ffffff;
+
+  font-size: 23px;
+  font-weight: 800;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-text strong {
+  font-size: 19px;
+  line-height: 1.1;
+}
+
+.brand-text span {
+  margin-top: 3px;
+
+  font-size: 9px;
+  letter-spacing: 2px;
+
+  color: #788278;
+}
+
+/* NAVIGATION */
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.nav-link {
+  padding: 10px 13px;
+
+  border-radius: 8px;
+
+  text-decoration: none;
+
+  color: #536057;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  color: #29352d;
+  background: #ebe9e0;
+}
+
+.nav-link.active {
+  color: #29352d;
+  background: #dfe3d8;
+}
+
+/* ACTIONS */
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.login-link {
+  text-decoration: none;
+
+  color: #39453d;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.login-link:hover {
+  color: #66745f;
+}
+
+.get-started-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 12px 19px;
+
+  border-radius: 10px;
+
+  background: #344238;
+  color: #ffffff;
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  transition: all 0.2s ease;
+}
+
+.get-started-btn:hover {
+  background: #26332a;
+  transform: translateY(-1px);
+}
+
+.get-started-btn span {
+  font-size: 17px;
+}
+
+/* MOBILE */
+
+@media (max-width: 900px) {
+  .nav-links {
+    display: none;
+  }
+
+  .navbar-container {
+    padding: 0 16px;
+  }
+
+  .navbar-actions {
+    gap: 10px;
+  }
+}

@@ -1,0 +1,415 @@
+/* =========================================
+   FEATURES PAGE
+========================================= */
+
+.features-page {
+  min-height: 100vh;
+  padding: 100px 8% 80px;
+
+  background: #f3f1e9;
+  color: #30382f;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.features-header {
+  max-width: 800px;
+  margin: 0 auto 70px;
+  text-align: center;
+}
+
+.features-header > span {
+  display: inline-block;
+
+  margin-bottom: 18px;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  letter-spacing: 2.5px;
+
+  color: #73816d;
+}
+
+.features-header h1 {
+  margin: 0;
+
+  font-size: clamp(40px, 5vw, 64px);
+
+  line-height: 1.05;
+
+  letter-spacing: -2px;
+
+  color: #2e362e;
+}
+
+.features-header p {
+  max-width: 650px;
+
+  margin: 25px auto 0;
+
+  font-size: 18px;
+
+  line-height: 1.7;
+
+  color: #6b746c;
+}
+
+
+/* =========================================
+   FEATURES GRID
+========================================= */
+
+.features-grid {
+  max-width: 1250px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 24px;
+}
+
+
+/* =========================================
+   NORMAL FEATURE CARD
+========================================= */
+
+.feature-card {
+  position: relative;
+
+  min-height: 390px;
+
+  padding: 32px;
+
+  border-radius: 18px;
+
+  background: #faf9f4;
+
+  border: 1px solid #deddd5;
+
+  box-shadow: 0 8px 25px rgba(40, 50, 40, 0.05);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-6px);
+
+  box-shadow: 0 18px 40px rgba(40, 50, 40, 0.10);
+
+  border-color: #b7c0b3;
+}
+
+
+/* =========================================
+   FEATURE NUMBER
+========================================= */
+
+.feature-number {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 28px;
+
+  border-radius: 12px;
+
+  background: #e5e8df;
+
+  color: #52604f;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  letter-spacing: 1px;
+}
+
+
+/* =========================================
+   CARD CONTENT
+========================================= */
+
+.feature-card h2 {
+  margin: 0 0 14px;
+
+  font-size: 24px;
+
+  line-height: 1.25;
+
+  color: #30382f;
+}
+
+.feature-card p {
+  margin: 0 0 25px;
+
+  color: #6b746c;
+
+  font-size: 15px;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================
+   FEATURE LIST
+========================================= */
+
+.feature-card ul {
+  margin: 0;
+
+  padding: 0;
+
+  list-style: none;
+}
+
+.feature-card li {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 12px;
+
+  color: #4f594f;
+
+  font-size: 14px;
+}
+
+.feature-card li span {
+  width: 20px;
+  height: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #e5e9df;
+
+  color: #61715d;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+/* =========================================
+   ⭐ THIRD FEATURE — SPECIAL HIGHLIGHT
+========================================= */
+
+.feature-card.featured {
+  transform: translateY(-12px);
+
+  background: #e4e9df;
+
+  border: 2px solid #7b8b75;
+
+  box-shadow:
+    0 20px 45px rgba(55, 70, 55, 0.16);
+
+  overflow: hidden;
+}
+
+
+/* Keep the highlighted card slightly elevated */
+
+.feature-card.featured:hover {
+  transform: translateY(-17px);
+
+  box-shadow:
+    0 25px 55px rgba(55, 70, 55, 0.20);
+}
+
+
+/* Number inside highlighted card */
+
+.feature-card.featured .feature-number {
+  background: #697966;
+
+  color: #ffffff;
+}
+
+
+/* Heading of highlighted card */
+
+.feature-card.featured h2 {
+  color: #263027;
+}
+
+
+/* Description */
+
+.feature-card.featured p {
+  color: #536054;
+}
+
+
+/* =========================================
+   CORE DIFFERENTIATOR LABEL
+========================================= */
+
+.featured-label {
+  position: absolute;
+
+  top: 0;
+  right: 0;
+
+  padding: 9px 14px;
+
+  border-radius: 0 18px 0 12px;
+
+  background: #697966;
+
+  color: #ffffff;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  letter-spacing: 1px;
+}
+
+
+/* =========================================
+   CTA SECTION
+========================================= */
+
+.features-cta {
+  max-width: 1250px;
+
+  margin: 80px auto 0;
+
+  padding: 45px 50px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 30px;
+
+  border-radius: 20px;
+
+  background: #303a31;
+
+  color: white;
+}
+
+.features-cta span {
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing: 2px;
+
+  color: #bdc8ba;
+}
+
+.features-cta h2 {
+  max-width: 600px;
+
+  margin: 12px 0 0;
+
+  font-size: 32px;
+
+  line-height: 1.2;
+}
+
+.features-cta a {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 14px 22px;
+
+  border-radius: 9px;
+
+  background: #f5f3eb;
+
+  color: #303a31;
+
+  text-decoration: none;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  transition: 0.2s ease;
+}
+
+.features-cta a:hover {
+  transform: translateY(-2px);
+
+  background: #ffffff;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1000px) {
+
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .feature-card.featured {
+    transform: none;
+  }
+
+  .feature-card.featured:hover {
+    transform: translateY(-6px);
+  }
+
+  .features-cta {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+}
+
+
+@media (max-width: 650px) {
+
+  .features-page {
+    padding: 70px 5% 60px;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-card {
+    min-height: auto;
+  }
+
+  .features-header h1 {
+    font-size: 42px;
+  }
+
+  .features-cta {
+    padding: 35px 25px;
+  }
+
+  .features-cta h2 {
+    font-size: 26px;
+  }
+}

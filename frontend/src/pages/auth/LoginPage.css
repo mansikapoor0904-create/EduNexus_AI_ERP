@@ -1,0 +1,163 @@
+.login-page {
+  min-height: 75vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 70px 20px;
+
+  background: #f7f5ef;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 440px;
+
+  padding: 42px;
+
+  border: 1px solid #dedcd4;
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 20px 60px rgba(52, 66, 56, 0.08);
+}
+
+.login-brand-icon {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: #697766;
+  color: white;
+
+  font-size: 23px;
+  font-weight: 800;
+}
+
+.login-label {
+  display: block;
+
+  margin-top: 25px;
+
+  color: #778270;
+
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.login-card h1 {
+  margin: 10px 0;
+
+  color: #344238;
+
+  font-size: 36px;
+}
+
+.login-description {
+  color: #778078;
+
+  font-size: 14px;
+}
+
+.login-card form {
+  margin-top: 30px;
+}
+
+.login-card label {
+  display: block;
+
+  margin: 17px 0 7px;
+
+  color: #4f5b52;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.login-card input {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 13px 14px;
+
+  border: 1px solid #d8d8d0;
+  border-radius: 8px;
+
+  outline: none;
+
+  background: #fafaf7;
+
+  color: #344238;
+
+  font-size: 13px;
+}
+
+.login-card input:focus {
+  border-color: #87947f;
+
+  box-shadow:
+    0 0 0 3px rgba(135, 148, 127, 0.12);
+}
+
+.login-submit {
+  width: 100%;
+
+  margin-top: 25px;
+
+  padding: 14px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: #344238;
+  color: white;
+
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.login-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.login-message {
+  margin-top: 18px;
+
+  padding: 12px;
+
+  border-radius: 8px;
+
+  background: #eef1eb;
+
+  color: #566354;
+
+  font-size: 12px;
+  text-align: center;
+}
+
+.back-home {
+  display: block;
+
+  margin: 22px auto 0;
+
+  border: none;
+  background: transparent;
+
+  color: #65715f;
+
+  cursor: pointer;
+
+  font-size: 12px;
+  font-weight: 700;
+}
