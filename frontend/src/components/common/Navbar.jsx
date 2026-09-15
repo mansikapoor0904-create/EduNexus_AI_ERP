@@ -73,9 +73,9 @@ function Navbar() {
             Login
           </Link>
 
-          <Link to="/login" className="get-started-btn">
-            Get Started
-            <span>→</span>
+          <Link to="/get-started" className="get-started-btn">
+          Get Started
+          <span>→</span>
           </Link>
 
         </div>

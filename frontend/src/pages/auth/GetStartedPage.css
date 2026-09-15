@@ -1,0 +1,577 @@
+/* =========================================================
+   EDUNEXUS AI ERP
+   CREATE ACCOUNT
+   ========================================================= */
+
+.create-account-page {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+
+  background: #f7f5ee;
+
+  color: #12372f;
+}
+
+
+/* =========================================================
+   BACKGROUND
+   ========================================================= */
+
+.create-account-background {
+  position: absolute;
+  inset: 0;
+
+  overflow: hidden;
+
+  pointer-events: none;
+
+  z-index: 0;
+}
+
+.create-grid {
+  position: absolute;
+  inset: 0;
+
+  background-image:
+    linear-gradient(
+      rgba(18, 55, 47, 0.035) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(18, 55, 47, 0.035) 1px,
+      transparent 1px
+    );
+
+  background-size: 44px 44px;
+}
+
+.create-orb {
+  position: absolute;
+
+  border-radius: 50%;
+
+  filter: blur(5px);
+}
+
+.create-orb-one {
+  width: 420px;
+  height: 420px;
+
+  top: -250px;
+  left: -160px;
+
+  background: rgba(111, 143, 115, 0.10);
+}
+
+.create-orb-two {
+  width: 450px;
+  height: 450px;
+
+  right: -230px;
+  bottom: -260px;
+
+  background: rgba(111, 143, 115, 0.08);
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.create-account-header {
+  position: relative;
+
+  z-index: 5;
+
+  padding: 28px 52px;
+}
+
+.create-brand {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 11px;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  font-family: inherit;
+}
+
+.create-brand-logo {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+
+  background: #738a73;
+
+  color: #ffffff;
+
+  font-size: 19px;
+
+  font-weight: 800;
+
+  box-shadow:
+    0 8px 20px rgba(18, 55, 47, 0.14);
+}
+
+.create-brand-text {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  line-height: 1;
+}
+
+.create-brand-text strong {
+  color: #12372f;
+
+  font-size: 17px;
+
+  font-weight: 750;
+}
+
+.create-brand-text span {
+  margin-top: 4px;
+
+  color: #718078;
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.create-account-container {
+  position: relative;
+
+  z-index: 2;
+
+  width: min(1050px, calc(100% - 50px));
+
+  margin: 25px auto 60px;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   HEADING
+   ========================================================= */
+
+.create-account-heading {
+  max-width: 700px;
+
+  margin: 0 auto 38px;
+}
+
+.create-eyebrow {
+  display: inline-block;
+
+  margin-bottom: 13px;
+
+  color: #6f8f73;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.8px;
+}
+
+.create-account-heading h1 {
+  margin: 0;
+
+  color: #12372f;
+
+  font-size: clamp(42px, 5vw, 62px);
+
+  line-height: 1.05;
+
+  letter-spacing: -2.5px;
+
+  font-weight: 750;
+}
+
+.create-account-heading h1 span {
+  color: #6f8f73;
+}
+
+.create-account-heading p {
+  max-width: 610px;
+
+  margin: 17px auto 0;
+
+  color: #66776d;
+
+  font-size: 15px;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   ROLE GRID
+   ========================================================= */
+
+.account-role-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 18px;
+
+  text-align: left;
+}
+
+
+/* =========================================================
+   ROLE CARD
+   ========================================================= */
+
+.account-role-card {
+  position: relative;
+
+  min-height: 315px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  padding: 26px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dce3dc;
+
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.88);
+
+  color: #12372f;
+
+  box-shadow:
+    0 18px 45px rgba(18, 55, 47, 0.06);
+
+  text-align: left;
+
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+button.account-role-card {
+  cursor: pointer;
+}
+
+button.account-role-card:hover {
+  transform: translateY(-5px);
+
+  border-color: #9db19f;
+
+  box-shadow:
+    0 25px 55px rgba(18, 55, 47, 0.11);
+}
+
+.restricted-card {
+  opacity: 0.82;
+
+  background:
+    rgba(250, 250, 246, 0.80);
+}
+
+
+/* =========================================================
+   ICON
+   ========================================================= */
+
+.account-role-icon {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 23px;
+
+  border-radius: 13px;
+}
+
+.student-role-icon {
+  background: #e2eee0;
+
+  color: #56765d;
+}
+
+.faculty-role-icon {
+  background: #e3ebe4;
+
+  color: #54715b;
+}
+
+.management-role-icon {
+  background: #eeeadd;
+
+  color: #756f51;
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.account-role-content {
+  flex: 1;
+}
+
+.role-label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #78907c;
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.3px;
+}
+
+.account-role-content h2 {
+  margin: 0;
+
+  color: #173c31;
+
+  font-size: 21px;
+
+  letter-spacing: -0.5px;
+}
+
+.account-role-content p {
+  margin: 12px 0 0;
+
+  color: #708078;
+
+  font-size: 12px;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   CARD FOOTER
+   ========================================================= */
+
+.role-card-footer {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-top: 25px;
+
+  padding-top: 17px;
+
+  border-top: 1px solid #e5eae4;
+
+  color: #45634d;
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+.role-card-footer svg {
+  transition: transform 0.2s ease;
+}
+
+.account-role-card:hover
+.role-card-footer svg {
+  transform: translateX(4px);
+}
+
+.restricted-footer {
+  color: #89958e;
+}
+
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
+
+.already-account {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  margin-top: 31px;
+
+  color: #718078;
+
+  font-size: 12px;
+}
+
+.already-account button {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #4f7057;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  font-weight: 750;
+
+  cursor: pointer;
+}
+
+.already-account button:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================================================
+   SECURITY
+   ========================================================= */
+
+.account-security {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  max-width: 600px;
+
+  margin: 25px auto 0;
+
+  padding-top: 19px;
+
+  border-top: 1px solid #e3e8e2;
+
+  color: #89958e;
+
+  font-size: 9px;
+
+  line-height: 1.5;
+}
+
+.account-security svg {
+  flex-shrink: 0;
+
+  color: #6f8f73;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+  .account-role-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .account-role-card {
+    min-height: auto;
+  }
+
+  .create-account-container {
+    width: min(600px, calc(100% - 40px));
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .create-account-header {
+    padding: 20px;
+  }
+
+  .create-account-container {
+    width: calc(100% - 28px);
+
+    margin-top: 15px;
+  }
+
+  .create-account-heading {
+    margin-bottom: 27px;
+  }
+
+  .create-account-heading h1 {
+    font-size: 40px;
+
+    letter-spacing: -1.8px;
+  }
+
+  .create-account-heading p {
+    font-size: 13px;
+  }
+
+  .account-role-card {
+    padding: 21px;
+
+    border-radius: 17px;
+  }
+
+  .already-account {
+    flex-direction: column;
+
+    gap: 5px;
+  }
+
+  .account-security {
+    padding-left: 15px;
+
+    padding-right: 15px;
+  }
+}

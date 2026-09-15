@@ -1,272 +1,242 @@
+
+
 import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import "./LandingPage.css";
 
+
 function LandingPage() {
+  const stageRef = useRef(null);
+  const shineRef = useRef(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [hover, setHover] = useState(false);
+  const raf = useRef(null);
+
+  const [counts, setCounts] = useState({ s: 0, a: 0, c: 0 });
+
+  useEffect(() => {
+    const target = { s: 2479, a: 91, c: 86 };
+    let i = 0;
+    const steps = 52;
+    const t = setInterval(() => {
+      i++;
+      const e = 1 - Math.pow(1 - i / steps, 3);
+      setCounts({
+        s: Math.round(target.s * e),
+        a: Math.round(target.a * e),
+        c: Math.round(target.c * e),
+      });
+      if (i >= steps) clearInterval(t);
+    }, 28);
+    return () => clearInterval(t);
+  }, []);
+
+  const onMove = (e) => {
+    const el = stageRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width;
+    const py = (e.clientY - r.top) / r.height;
+    const x = (py - 0.5) * -14;
+    const y = (px - 0.5) * 18;
+
+    if (raf.current) cancelAnimationFrame(raf.current);
+    raf.current = requestAnimationFrame(() => {
+      setTilt({ x, y });
+      if (shineRef.current) {
+        shineRef.current.style.background = `
+          radial-gradient(
+            420px circle at ${px * 100}% ${py * 100}%,
+            rgba(255,255,255,.38),
+            transparent 55%
+          )
+        `;
+      }
+    });
+  };
+
+  const onLeave = () => {
+    setHover(false);
+    setTilt({ x: 0, y: 0 });
+    if (shineRef.current) shineRef.current.style.background = "transparent";
+  };
+
   return (
-    <main>
+    <main className="lp">
+      <section className="hero">
+        <div className="hero-grid-bg" />
+        <div className="hero-sun" />
 
-      {/* HERO */}
-
-      <section className="hero-section">
-
-        <div className="hero-container">
-
-          <div className="hero-content">
-
-            <div className="hero-badge">
+        <div className="hero-wrap">
+          {/* LEFT */}
+          <div className="copy">
+            <div className="badge">
+              <span className="live" />
               AI-POWERED COLLEGE ERP
             </div>
 
             <h1>
-              One Intelligent Platform
+              One Intelligent
               <br />
-              <span>for the Entire College.</span>
+              <span>Platform</span>
+              <br />
+              for the Entire
+              <br />
+              College.
             </h1>
 
-            <p className="hero-description">
-              EduNexus AI connects academic management,
-              student operations, faculty workflows,
-              administration and career intelligence
-              in one modern platform.
+            <p className="lede">
+              Unify academic management, student operations, faculty
+              workflows, administration and AI-driven career intelligence
+              into one enterprise-grade institutional platform.
             </p>
 
-            <div className="hero-actions">
-
-              <Link
-                to="/login"
-                className="hero-primary-btn"
-              >
-                Get Started Free →
-              </Link>
-
-              <Link
-                to="/features"
-                className="hero-secondary-btn"
-              >
-                Explore Features
-              </Link>
-
+            <div className="service-row">
+              {[
+                { ico: cap, label: "Academics" },
+                { ico: user, label: "Students" },
+                { ico: users, label: "Faculty" },
+                { ico: cal, label: "Administration" },
+                { ico: chip, label: "AI Career" },
+              ].map((s) => (
+                <div key={s.label} className="service">
+                  <span className="service-ico" dangerouslySetInnerHTML={{ __html: s.ico }} />
+                  <small>{s.label}</small>
+                </div>
+              ))}
             </div>
 
-            <div className="hero-trust">
-
-              <span>✓ Role-Based Access</span>
-              <span>✓ Secure Architecture</span>
-              <span>✓ AI-Powered Insights</span>
-
+            <div className="actions">
+              <Link to="./request-demo " className="btn-primary">
+                Request a Demo
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2.4">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </Link>
+              <Link to="/features" className="btn-ghost">Explore Features</Link>
             </div>
 
+            <div className="mini-stats">
+              <b>{counts.s.toLocaleString()}</b><em>Students</em>
+              <i />
+              <b>{counts.a}%</b><em>Attendance</em>
+              <i />
+              <b>{counts.c}</b><em>Courses</em>
+            </div>
           </div>
 
-          {/* DASHBOARD PREVIEW */}
+          {/* RIGHT — 3D IMAGE */}
+          <div
+            className="stage"
+            ref={stageRef}
+            onMouseMove={onMove}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={onLeave}
+          >
+            <div className="stage-glow" />
+            <div className="stage-ring" />
 
-          <div className="hero-dashboard">
+            <div
+              className="scene-3d"
+              style={{
+                transform: `
+                  perspective(1400px)
+                  rotateX(${tilt.x}deg)
+                  rotateY(${tilt.y}deg)
+                  scale(${hover ? 1.035 : 1})
+                `,
+              }}
+            >
+              <div className="scene-shadow" />
 
-            <div className="preview-header">
-              <div>
-                <strong>EduNexus AI</strong>
-                <span>College Management System</span>
-              </div>
-
-              <div className="preview-status">
-                ● System Active
+              <div className="scene-frame">
+                <img
+                  src="images-Photoroom.png"
+                  alt="College ERP platform — academics, students, faculty, management and AI insights"
+                  className="scene-img"
+                  draggable="false"
+                />
+                <div className="scene-shine" ref={shineRef} />
+                <div className="scene-edge" />
               </div>
             </div>
-
-            <div className="preview-body">
-
-              <aside className="preview-sidebar">
-
-                <div className="preview-sidebar-item active">
-                  Dashboard
-                </div>
-
-                <div className="preview-sidebar-item">
-                  Academics
-                </div>
-
-                <div className="preview-sidebar-item">
-                  Attendance
-                </div>
-
-                <div className="preview-sidebar-item">
-                  Examinations
-                </div>
-
-                <div className="preview-sidebar-item">
-                  Fees
-                </div>
-
-                <div className="preview-sidebar-item">
-                  Career AI
-                </div>
-
-              </aside>
-
-              <div className="preview-main">
-
-                <h3>College Overview</h3>
-
-                <div className="preview-cards">
-
-                  <div>
-                    <span>Students</span>
-                    <strong>2,480</strong>
-                  </div>
-
-                  <div>
-                    <span>Attendance</span>
-                    <strong>91%</strong>
-                  </div>
-
-                  <div>
-                    <span>Courses</span>
-                    <strong>86</strong>
-                  </div>
-
-                </div>
-
-                <div className="preview-chart">
-                  <span>Academic Performance</span>
-
-                  <div className="chart-bars">
-                    <i style={{ height: "45%" }} />
-                    <i style={{ height: "62%" }} />
-                    <i style={{ height: "52%" }} />
-                    <i style={{ height: "78%" }} />
-                    <i style={{ height: "69%" }} />
-                    <i style={{ height: "88%" }} />
-                    <i style={{ height: "80%" }} />
-                  </div>
-                </div>
-
-              </div>
-
-            </div>
-
           </div>
-
         </div>
-
       </section>
 
-
-      {/* TRUST SECTION */}
-
-      <section className="trust-section">
-
-        <p>
-          BUILT FOR MODERN EDUCATIONAL INSTITUTIONS
-        </p>
-
-        <div className="trust-grid">
-
-          <span>ACADEMICS</span>
-          <span>STUDENT LIFE</span>
-          <span>FACULTY</span>
-          <span>ADMINISTRATION</span>
-          <span>CAREER</span>
-
+      <section className="trust">
+        <p>BUILT FOR MODERN EDUCATIONAL INSTITUTIONS</p>
+        <div>
+          {["ACADEMICS", "STUDENT LIFE", "FACULTY", "ADMINISTRATION", "CAREER AI"].map((x) => (
+            <span key={x}><i />{x}</span>
+          ))}
         </div>
-
       </section>
 
-
-      {/* VALUE SECTION */}
-
-      <section className="value-section">
-
-        <div className="section-heading">
-
-          <span>WHY EDUNEXUS</span>
-
+      <section className="value">
+        <div className="value-head">
+          <span>WHY CHOOSE US</span>
           <h2>
             Everything your institution needs.
-            <br />
-            Connected intelligently.
+            <br /> Connected intelligently.
           </h2>
-
           <p>
-            Replace disconnected systems with a unified
-            college operating platform designed for
-            students, faculty and administrators.
+            Replace fragmented systems with a unified college operating
+            platform engineered for students, faculty and administrators.
           </p>
-
         </div>
 
         <div className="value-grid">
-
-          <article>
-            <div className="value-number">01</div>
+          <article className="vcard">
+            <em>01</em>
             <h3>Unified ERP</h3>
             <p>
-              Manage students, academics, attendance,
-              examinations, fees and administration
-              from one platform.
+              Manage students, academics, attendance, examinations,
+              fees and administration from one centralized platform.
             </p>
           </article>
 
-          <article className="featured-value-card">
-            <div className="value-number">02</div>
-
+          <article className="vcard">
+            <em>02</em>
             <h3>AI Intelligence</h3>
-
             <p>
-              Turn academic and career data into
-              meaningful insights, recommendations
-              and personalized actions.
+              Transform academic and career data into insights,
+              recommendations and proactive actions for every stakeholder.
             </p>
-
-            <Link to="/features">
-              Explore AI Features →
-            </Link>
+            <Link to="/features">Explore AI Features →</Link>
           </article>
 
-          <article>
-            <div className="value-number">03</div>
-
+          {/* 3rd card — featured */}
+          <article className="vcard vcard-hot">
+            <div className="vglow" />
+            <em>03</em>
             <h3>Student 360°</h3>
-
             <p>
-              Connect academic performance, skills,
-              projects, resumes, assessments and
-              career goals.
+              Connect performance, skills, projects, portfolios,
+              assessments and career goals in one intelligence profile.
             </p>
+            <Link to="/features">Explore Student Profile →</Link>
           </article>
-
         </div>
-
       </section>
 
-
-      {/* CTA */}
-
-      <section className="home-cta">
-
+      <section className="cta">
         <div>
-
-          <span>READY TO GET STARTED?</span>
-
-          <h2>
-            Build a smarter campus
-            with EduNexus AI.
-          </h2>
-
-          <p>
-            Bring your academic, administrative and
-            career workflows together.
-          </p>
-
+          <span>READY TO TRANSFORM YOUR CAMPUS?</span>
+          <h2>Build a smarter institution with AI.</h2>
+          <p>Bring academic, administrative and career workflows together.</p>
         </div>
-
-        <Link to="/login">
-          Start Your Journey →
-        </Link>
-
+        <Link to="/login" className="btn-primary">Start Your Journey →</Link>
       </section>
-
     </main>
   );
 }
+
+const cap = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 9.5 12 5l9 4.5-9 4.5L3 9.5Z"/><path d="M7 12v4.5c0 .8 2.2 2.5 5 2.5s5-1.7 5-2.5V12"/><path d="M21 10v6"/></svg>`;
+const user = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 19c1.2-3.2 3.5-4.8 6.5-4.8S16.8 15.8 18.5 19"/></svg>`;
+const users = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="2.6"/><circle cx="16" cy="9" r="2.2"/><path d="M4 18.5c.9-2.6 2.6-4 5-4s4.1 1.4 5 4"/><path d="M13.5 18.5c.5-1.8 1.7-3 3.4-3 1.6 0 2.8 1 3.4 3"/></svg>`;
+const cal = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="6" width="16" height="14" rx="2"/><path d="M4 10h16M8 4v4M16 4v4"/></svg>`;
+const chip = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M9 3v4M15 3v4M9 17v4M15 17v4M3 9h4M3 15h4M17 9h4M17 15h4"/></svg>`;
 
 export default LandingPage;

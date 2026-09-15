@@ -12,13 +12,14 @@
 }
 
 .navbar-container {
-  max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
 
   min-height: 76px;
 
   display: flex;
   align-items: center;
+  gap: 150px;
   justify-content: space-between;
 
   padding: 0 24px;
@@ -33,6 +34,10 @@
 
   text-decoration: none;
   color: #29352d;
+  flex-shrink:0;
+  margin-left:-35px;
+  
+
 }
 
 .brand-icon {
@@ -77,6 +82,8 @@
   display: flex;
   align-items: center;
   gap: 7px;
+  flex: 1;
+  justify-content:center;
 }
 
 .nav-link {
@@ -110,6 +117,7 @@
   display: flex;
   align-items: center;
   gap: 18px;
+  flex-shrink:0;
 }
 
 .login-link {

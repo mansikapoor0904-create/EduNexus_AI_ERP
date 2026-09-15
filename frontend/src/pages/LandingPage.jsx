@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import Navbar from "../../components/common/Navbar";
-import Footer from "../../components/common/Footer";
+
+
 import "./LandingPage.css";
 
 const features = [
@@ -58,8 +58,8 @@ function LandingPage() {
             </p>
 
             <div className="hero-actions">
-              <Link to="/get-started" className="hero-primary">
-                Get Started →
+              <Link to="/request-demo " className="hero-primary">
+                Request a Demo
               </Link>
 
               <Link to="/dashboard" className="hero-secondary">
