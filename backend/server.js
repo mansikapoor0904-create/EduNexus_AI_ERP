@@ -3,6 +3,8 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
+const db = require("./config/db");
+const authRoutes = require("./routes/auth.routes");
 
 const app = express();
 
@@ -13,7 +15,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5174",
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
     credentials: true,
   })
 );
@@ -69,13 +71,37 @@ app.get("/", (req, res) => {
 // HEALTH CHECK API
 // ==========================================
 
-app.get("/api/health", (req, res) => {
-  res.json({
-    success: true,
-    message: "EduNexus AI ERP backend is healthy.",
-    status: "OK",
-  });
+app.get("/api/health", async (req, res) => {
+  try {
+    const result = await db.query(
+      "SELECT current_database() AS database, NOW() AS server_time"
+    );
+
+    res.json({
+      success: true,
+      message: "EduNexus AI ERP backend is healthy.",
+      status: "OK",
+      database: result.rows[0].database,
+      databaseConnected: true,
+      serverTime: result.rows[0].server_time,
+    });
+  } catch (error) {
+    console.error("Database health check failed:", error.message);
+
+    res.status(500).json({
+      success: false,
+      message: "Backend is running, but database connection failed.",
+      databaseConnected: false,
+    });
+  }
 });
+
+
+// ==========================================
+// AUTH ROUTES
+// ==========================================
+
+app.use("/api/auth", authRoutes);
 
 
 // ==========================================

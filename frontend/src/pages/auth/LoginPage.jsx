@@ -592,7 +592,7 @@ function LoginPage() {
                 </>
               ) : (
                 <>
-                  Login in
+                  Login 
                   <ArrowRight size={18} />
                 </>
               )}

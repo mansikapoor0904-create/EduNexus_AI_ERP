@@ -1,0 +1,514 @@
+/* =========================================================
+   MANAGEMENT ACCESS REQUEST
+   EduNexus AI ERP
+========================================================= */
+
+.management-request-page {
+  min-height: 100vh;
+  padding: 70px 24px 80px;
+  background:
+    linear-gradient(rgba(38, 61, 51, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(38, 61, 51, 0.035) 1px, transparent 1px),
+    #f7f6f1;
+  background-size: 42px 42px;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+
+  color: #263d33;
+}
+
+
+/* =========================================================
+   MAIN CARD
+========================================================= */
+
+.management-request-card {
+  width: 100%;
+  max-width: 1050px;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  border: 1px solid #dfe5df;
+  border-radius: 24px;
+
+  padding: 52px;
+
+  box-shadow:
+    0 25px 70px rgba(38, 61, 51, 0.08),
+    0 5px 18px rgba(38, 61, 51, 0.04);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.management-header {
+  max-width: 720px;
+  margin-bottom: 44px;
+}
+
+.management-eyebrow {
+  display: inline-block;
+
+  margin-bottom: 14px;
+
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+
+  color: #5e7868;
+}
+
+.management-header h1 {
+  margin: 0 0 14px;
+
+  font-size: clamp(32px, 4vw, 46px);
+  line-height: 1.12;
+
+  letter-spacing: -1.5px;
+
+  color: #243a30;
+}
+
+.management-header p {
+  margin: 0;
+
+  max-width: 650px;
+
+  font-size: 16px;
+  line-height: 1.7;
+
+  color: #6b7c74;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.management-form {
+  width: 100%;
+}
+
+
+/* =========================================================
+   FORM SECTION
+========================================================= */
+
+.form-section {
+  padding: 30px 0;
+
+  border-top: 1px solid #e5e9e5;
+}
+
+.form-section:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.form-section:last-of-type {
+  padding-bottom: 32px;
+}
+
+
+/* =========================================================
+   SECTION HEADING
+========================================================= */
+
+.section-heading {
+  margin-bottom: 24px;
+}
+
+.section-heading h2 {
+  margin: 0 0 7px;
+
+  font-size: 20px;
+  font-weight: 700;
+
+  color: #263d33;
+}
+
+.section-heading p {
+  margin: 0;
+
+  font-size: 14px;
+  line-height: 1.6;
+
+  color: #7b8982;
+}
+
+
+/* =========================================================
+   FORM GRID
+========================================================= */
+
+.form-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 22px 24px;
+}
+
+
+/* =========================================================
+   FORM GROUP
+========================================================= */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.form-group label {
+  margin-bottom: 8px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  color: #40554a;
+}
+
+
+/* =========================================================
+   INPUT + SELECT
+========================================================= */
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  height: 50px;
+
+  padding: 0 15px;
+
+  border: 1px solid #d7dfd9;
+  border-radius: 10px;
+
+  background: #fcfdfb;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  color: #263d33;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+
+/* SELECT */
+
+.form-group select {
+  cursor: pointer;
+}
+
+
+/* PLACEHOLDER */
+
+.form-group input::placeholder {
+  color: #a0aaa5;
+}
+
+
+/* FOCUS */
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #66806f;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 0 0 3px rgba(102, 128, 111, 0.12);
+}
+
+
+/* HOVER */
+
+.form-group input:hover,
+.form-group select:hover {
+  border-color: #bdc9c1;
+}
+
+
+/* =========================================================
+   PASSWORD SECTION
+========================================================= */
+
+.form-section:nth-of-type(3) {
+  background: #fafbf8;
+
+  margin-top: 4px;
+
+  padding: 28px;
+
+  border: 1px solid #e4e9e4;
+  border-radius: 16px;
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+.management-message {
+  margin: 6px 0 20px;
+
+  padding: 14px 16px;
+
+  border: 1px solid #cbdccf;
+  border-radius: 10px;
+
+  background: #f1f7f2;
+
+  color: #356047;
+
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   SUBMIT BUTTON
+========================================================= */
+
+.management-submit {
+  width: 100%;
+  min-height: 54px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  border: none;
+  border-radius: 11px;
+
+  background: #30483d;
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.management-submit:hover:not(:disabled) {
+  background: #243a30;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 8px 22px rgba(48, 72, 61, 0.18);
+}
+
+.management-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.management-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   SECURITY NOTE
+========================================================= */
+
+.management-security {
+  margin-top: 22px;
+  padding: 15px 16px;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  border: 1px solid #e1e6e1;
+  border-radius: 10px;
+
+  background: #f8faf7;
+
+  color: #66766e;
+
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.management-security svg {
+  flex-shrink: 0;
+
+  margin-top: 1px;
+
+  color: #60796a;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.management-footer {
+  margin-top: 25px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+
+  font-size: 14px;
+
+  color: #7b8780;
+}
+
+.management-footer a {
+  color: #30483d;
+
+  font-weight: 700;
+
+  text-decoration: none;
+
+  transition: color 0.2s ease;
+}
+
+.management-footer a:hover {
+  color: #1e3028;
+
+  text-decoration: underline;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 800px) {
+  .management-request-page {
+    padding: 40px 18px 60px;
+  }
+
+  .management-request-card {
+    padding: 36px 28px;
+
+    border-radius: 20px;
+  }
+
+  .management-header {
+    margin-bottom: 34px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+
+    gap: 19px;
+  }
+
+  .form-group.full-width {
+    grid-column: auto;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 520px) {
+  .management-request-page {
+    padding: 20px 12px 40px;
+
+    background-size: 30px 30px;
+  }
+
+  .management-request-card {
+    padding: 28px 19px;
+
+    border-radius: 17px;
+  }
+
+  .management-header h1 {
+    font-size: 30px;
+
+    letter-spacing: -0.8px;
+  }
+
+  .management-header p {
+    font-size: 14px;
+  }
+
+  .section-heading h2 {
+    font-size: 18px;
+  }
+
+  .section-heading p {
+    font-size: 13px;
+  }
+
+  .form-section {
+    padding: 25px 0;
+  }
+
+  .form-section:nth-of-type(3) {
+    padding: 22px 16px;
+  }
+
+  .form-group input,
+  .form-group select {
+    height: 48px;
+
+    font-size: 14px;
+  }
+
+  .management-submit {
+    min-height: 52px;
+
+    font-size: 14px;
+  }
+
+  .management-footer {
+    flex-direction: column;
+
+    gap: 4px;
+
+    text-align: center;
+  }
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.management-submit:focus-visible,
+.management-footer a:focus-visible,
+.form-group input:focus-visible,
+.form-group select:focus-visible {
+  outline: 3px solid rgba(102, 128, 111, 0.25);
+  outline-offset: 2px;
+}
