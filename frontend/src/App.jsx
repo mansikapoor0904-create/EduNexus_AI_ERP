@@ -15,8 +15,9 @@ import StudentSignupPage from "./pages/auth/StudentsigninPage.jsx";
 import FacultyInvitationPage from "./pages/auth/FacultyInvitationPage";
 import ManagementAccessRequestPage from "./pages/auth/ManagementAccessRequestPage";
 
-import RequestDemoPage from "./pages/demo/requestdemo";
 
+import RequestDemoPage from "./pages/demo/requestdemo";
+import ManagementDashboard from "./pages/ManagementDashboard/ManagementDashboard";
 import "./App.css";
 
 
@@ -86,6 +87,11 @@ function App() {
         <Route
           path="/dashboard"
           element={<DashboardPage />}
+        />
+        {/* MANAGEMENT DASHBOARD */}
+        <Route
+          path="/management/dashboard"
+          element={<ManagementDashboard />}
         />
 
         {/* LOGIN */}

@@ -1,190 +1,122 @@
-// import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import "./LoginPage.css";
-
-// function LoginPage() {
-//   const navigate = useNavigate();
-
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-
-//   const [loading, setLoading] = useState(false);
-//   const [message, setMessage] = useState("");
-
-//   const handleLogin = async (event) => {
-//     event.preventDefault();
-
-//     setLoading(true);
-//     setMessage("");
-
-//     try {
-//       const response = await fetch(
-//         "http://localhost:5000/api/login",
-//         {
-//           method: "POST",
-
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-
-//           body: JSON.stringify({
-//             email,
-//             password,
-//           }),
-//         }
-//       );
-
-//       const data = await response.json();
-
-//       if (response.ok && data.success) {
-
-//         localStorage.setItem(
-//           "user",
-//           JSON.stringify(data.user || {})
-//         );
-
-//         setMessage("Login successful!");
-
-//         setTimeout(() => {
-//           navigate("/dashboard");
-//         }, 700);
-
-//       } else {
-
-//         setMessage(
-//           data.message || "Invalid email or password."
-//         );
-
-//       }
-
-//     } catch (error) {
-
-//       console.error(error);
-
-//       setMessage(
-//         "Unable to connect to the EduNexus backend."
-//       );
-
-//     } finally {
-
-//       setLoading(false);
-
-//     }
-//   };
-
-//   return (
-//     <main className="login-page">
-
-//       <div className="login-card">
-
-//         <div className="login-brand-icon">
-//           E
-//         </div>
-
-//         <span className="login-label">
-//           EDUNEXUS AI ERP
-//         </span>
-
-//         <h1>Welcome back.</h1>
-
-//         <p className="login-description">
-//           Sign in to access your EduNexus workspace.
-//         </p>
-
-//         <form onSubmit={handleLogin}>
-
-//           <label>Email Address</label>
-
-//           <input
-//             type="email"
-//             placeholder="you@example.com"
-//             value={email}
-//             onChange={(event) =>
-//               setEmail(event.target.value)
-//             }
-//             required
-//           />
-
-//           <label>Password</label>
-
-//           <input
-//             type="password"
-//             placeholder="Enter your password"
-//             value={password}
-//             onChange={(event) =>
-//               setPassword(event.target.value)
-//             }
-//             required
-//           />
-
-//           <button
-//             type="submit"
-//             disabled={loading}
-//             className="login-submit"
-//           >
-//             {loading
-//               ? "Signing in..."
-//               : "Sign In →"}
-//           </button>
-
-//         </form>
-
-//         {message && (
-//           <div className="login-message">
-//             {message}
-//           </div>
-//         )}
-
-//         <button
-//           className="back-home"
-//           onClick={() => navigate("/")}
-//         >
-//           ← Back to Home
-//         </button>
-
-//       </div>
-
-//     </main>
-//   );
-// }
-
-// export default LoginPage;
-
-
 import { useState } from "react";
-import { Eye, EyeOff, ArrowRight, ShieldCheck } from "lucide-react";
-import { Link } from "react-router-dom";
+import {
+  Eye,
+  EyeOff,
+  ArrowRight,
+  ShieldCheck,
+} from "lucide-react";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
+
+import { loginUser } from "../../services/authService";
 
 import "./LoginPage.css";
 
 function LoginPage() {
+  const navigate = useNavigate();
+
+  // ================================
+  // LOGIN STATE
+  // ================================
+
   const [role, setRole] = useState("student");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // ================================
+  // LOGIN
+  // ================================
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
-    if (!email.trim() || !password.trim()) {
+    if (!email.trim()) {
+      alert("Please enter your email or Institute ID.");
       return;
     }
 
-    /*
-      Backend authentication will be connected in the next step.
+    if (!password.trim()) {
+      alert("Please enter your password.");
+      return;
+    }
 
-      DO NOT add fake navigation here.
-      A professional ERP should never pretend that login
-      succeeded when the backend has not authenticated the user.
-    */
+    try {
+      setLoading(true);
 
-    setLoading(true);
+      const response = await loginUser({
+        email: email.trim(),
+        password,
+        role,
+        rememberMe,
+      });
 
-    setTimeout(() => {
+      if (!response?.success) {
+        throw new Error(
+          response?.message || "Login failed."
+        );
+      }
+
+      const user = response.user;
+
+      if (!user) {
+        throw new Error(
+          "Login succeeded, but user information was not returned."
+        );
+      }
+
+      // =====================================
+      // ROLE-BASED REDIRECTION
+      // =====================================
+
+      if (user.role === "student") {
+        navigate("/student/dashboard", {
+          replace: true,
+        });
+
+        return;
+      }
+
+      if (user.role === "faculty") {
+        navigate("/faculty/dashboard", {
+          replace: true,
+        });
+
+        return;
+      }
+
+      if (
+        user.role === "manager" ||
+        user.role === "admin"
+      ) {
+        navigate("/management/dashboard", {
+          replace: true,
+        });
+
+        return;
+      }
+
+      throw new Error("Invalid account role.");
+    } catch (error) {
+      console.error("Login error:", error);
+
+      alert(
+        error?.response?.data?.message ||
+        error?.message ||
+        "Unable to login. Please try again."
+      );
+    } finally {
       setLoading(false);
-    }, 800);
+    }
   };
+
+  // ================================
+  // UI
+  // ================================
 
   return (
     <main className="login-page">
@@ -195,18 +127,22 @@ function LoginPage() {
 
       <div className="login-background">
         <div className="background-grid"></div>
+
         <div className="background-orb orb-one"></div>
         <div className="background-orb orb-two"></div>
         <div className="background-orb orb-three"></div>
       </div>
-
 
       {/* =========================================
           BRAND
       ========================================= */}
 
       <div className="login-brand">
-        <Link to="/" className="login-brand-link">
+
+        <Link
+          to="/"
+          className="login-brand-link"
+        >
 
           <div className="login-brand-logo">
             E
@@ -218,8 +154,8 @@ function LoginPage() {
           </div>
 
         </Link>
-      </div>
 
+      </div>
 
       {/* =========================================
           LOGIN CONTENT
@@ -227,12 +163,18 @@ function LoginPage() {
 
       <section className="login-container">
 
-        {/* LEFT SIDE */}
+        {/* =====================================
+            LEFT SIDE
+        ===================================== */}
+
         <div className="login-showcase">
 
           <div className="showcase-badge">
             <ShieldCheck size={16} />
-            <span>Secure Education Platform</span>
+
+            <span>
+              Secure Education Platform
+            </span>
           </div>
 
           <h1>
@@ -244,22 +186,27 @@ function LoginPage() {
           </h1>
 
           <p>
-            EduNexus brings students, faculty and management
-            together through one secure academic and
-            administrative workspace.
+            EduNexus brings students, faculty and
+            management together through one secure
+            academic and administrative workspace.
           </p>
 
-
-          {/* Decorative ERP visual */}
+          {/* =====================================
+              ERP VISUAL
+          ===================================== */}
 
           <div className="erp-visual">
 
             <div className="visual-glow"></div>
 
+            {/* MAIN CARD */}
+
             <div className="visual-card main-card">
 
               <div className="visual-card-header">
+
                 <div>
+
                   <span className="visual-label">
                     OVERVIEW
                   </span>
@@ -267,50 +214,82 @@ function LoginPage() {
                   <strong>
                     Academic Performance
                   </strong>
+
                 </div>
 
                 <div className="visual-status">
+
                   <span></span>
+
                   Live
+
                 </div>
+
               </div>
 
+              {/* STATS */}
 
               <div className="visual-stat-row">
 
                 <div className="visual-stat">
-                  <span>Attendance</span>
-                  <strong>92.4%</strong>
+
+                  <span>
+                    Attendance
+                  </span>
+
+                  <strong>
+                    92.4%
+                  </strong>
+
                 </div>
 
                 <div className="visual-stat">
-                  <span>Performance</span>
-                  <strong>87.8%</strong>
+
+                  <span>
+                    Performance
+                  </span>
+
+                  <strong>
+                    87.8%
+                  </strong>
+
                 </div>
 
               </div>
 
+              {/* CHART */}
 
               <div className="visual-chart">
 
                 <div className="chart-line line-one"></div>
+
                 <div className="chart-line line-two"></div>
+
                 <div className="chart-line line-three"></div>
 
                 <div className="chart-bars">
+
                   <span style={{ height: "38%" }}></span>
+
                   <span style={{ height: "55%" }}></span>
+
                   <span style={{ height: "46%" }}></span>
+
                   <span style={{ height: "70%" }}></span>
+
                   <span style={{ height: "61%" }}></span>
+
                   <span style={{ height: "84%" }}></span>
+
                   <span style={{ height: "76%" }}></span>
+
                 </div>
 
               </div>
 
             </div>
 
+            {/* FLOATING CARD 1 */}
 
             <div className="visual-card floating-card card-one">
 
@@ -319,12 +298,20 @@ function LoginPage() {
               </div>
 
               <div>
-                <span>Attendance</span>
-                <strong>92.4%</strong>
+
+                <span>
+                  Attendance
+                </span>
+
+                <strong>
+                  92.4%
+                </strong>
+
               </div>
 
             </div>
 
+            {/* FLOATING CARD 2 */}
 
             <div className="visual-card floating-card card-two">
 
@@ -333,8 +320,15 @@ function LoginPage() {
               </div>
 
               <div>
-                <span>AI Insights</span>
-                <strong>12 new</strong>
+
+                <span>
+                  AI Insights
+                </span>
+
+                <strong>
+                  12 new
+                </strong>
+
               </div>
 
             </div>
@@ -343,10 +337,13 @@ function LoginPage() {
 
         </div>
 
-
-        {/* RIGHT SIDE — LOGIN FORM */}
+        {/* =====================================
+            RIGHT SIDE — LOGIN CARD
+        ===================================== */}
 
         <div className="login-card">
+
+          {/* HEADER */}
 
           <div className="login-card-header">
 
@@ -368,8 +365,9 @@ function LoginPage() {
 
           </div>
 
-
-          {/* ROLE SELECTION */}
+          {/* =====================================
+              ROLE SELECTION
+          ===================================== */}
 
           <div className="role-section">
 
@@ -384,9 +382,13 @@ function LoginPage() {
               <button
                 type="button"
                 className={`role-option ${
-                  role === "student" ? "selected" : ""
+                  role === "student"
+                    ? "selected"
+                    : ""
                 }`}
-                onClick={() => setRole("student")}
+                onClick={() =>
+                  setRole("student")
+                }
               >
 
                 <span className="role-icon student-icon">
@@ -394,8 +396,15 @@ function LoginPage() {
                 </span>
 
                 <span className="role-content">
-                  <strong>Student</strong>
-                  <small>Academic workspace</small>
+
+                  <strong>
+                    Student
+                  </strong>
+
+                  <small>
+                    Academic workspace
+                  </small>
+
                 </span>
 
                 <span className="role-radio">
@@ -404,15 +413,18 @@ function LoginPage() {
 
               </button>
 
-
               {/* FACULTY */}
 
               <button
                 type="button"
                 className={`role-option ${
-                  role === "faculty" ? "selected" : ""
+                  role === "faculty"
+                    ? "selected"
+                    : ""
                 }`}
-                onClick={() => setRole("faculty")}
+                onClick={() =>
+                  setRole("faculty")
+                }
               >
 
                 <span className="role-icon faculty-icon">
@@ -420,8 +432,15 @@ function LoginPage() {
                 </span>
 
                 <span className="role-content">
-                  <strong>Faculty</strong>
-                  <small>Teaching workspace</small>
+
+                  <strong>
+                    Faculty
+                  </strong>
+
+                  <small>
+                    Teaching workspace
+                  </small>
+
                 </span>
 
                 <span className="role-radio">
@@ -430,15 +449,18 @@ function LoginPage() {
 
               </button>
 
-
               {/* MANAGEMENT */}
 
               <button
                 type="button"
                 className={`role-option ${
-                  role === "management" ? "selected" : ""
+                  role === "management"
+                    ? "selected"
+                    : ""
                 }`}
-                onClick={() => setRole("management")}
+                onClick={() =>
+                  setRole("management")
+                }
               >
 
                 <span className="role-icon management-icon">
@@ -446,8 +468,15 @@ function LoginPage() {
                 </span>
 
                 <span className="role-content">
-                  <strong>Management</strong>
-                  <small>Administration workspace</small>
+
+                  <strong>
+                    Management
+                  </strong>
+
+                  <small>
+                    Administration workspace
+                  </small>
+
                 </span>
 
                 <span className="role-radio">
@@ -460,15 +489,16 @@ function LoginPage() {
 
           </div>
 
-
-          {/* LOGIN FORM */}
+          {/* =====================================
+              LOGIN FORM
+          ===================================== */}
 
           <form
             className="login-form"
             onSubmit={handleLogin}
           >
 
-            {/* EMAIL */}
+            {/* EMAIL / INSTITUTE ID */}
 
             <div className="form-group">
 
@@ -491,10 +521,10 @@ function LoginPage() {
                     : "Enter your institution email"
                 }
                 autoComplete="username"
+                disabled={loading}
               />
 
             </div>
-
 
             {/* PASSWORD */}
 
@@ -512,7 +542,6 @@ function LoginPage() {
 
               </div>
 
-
               <div className="password-wrapper">
 
                 <input
@@ -528,39 +557,55 @@ function LoginPage() {
                   }
                   placeholder="Enter your password"
                   autoComplete="current-password"
+                  disabled={loading}
                 />
 
                 <button
                   type="button"
                   className="password-toggle"
                   onClick={() =>
-                    setShowPassword(!showPassword)
+                    setShowPassword(
+                      (previous) => !previous
+                    )
                   }
                   aria-label={
                     showPassword
                       ? "Hide password"
                       : "Show password"
                   }
+                  disabled={loading}
                 >
+
                   {showPassword ? (
                     <EyeOff size={19} />
                   ) : (
                     <Eye size={19} />
                   )}
+
                 </button>
 
               </div>
 
             </div>
 
-
-            {/* REMEMBER ME */}
+            {/* =====================================
+                REMEMBER ME
+            ===================================== */}
 
             <div className="login-options">
 
               <label className="remember-me">
 
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(event) =>
+                    setRememberMe(
+                      event.target.checked
+                    )
+                  }
+                  disabled={loading}
+                />
 
                 <span className="custom-checkbox"></span>
 
@@ -572,8 +617,9 @@ function LoginPage() {
 
             </div>
 
-
-            {/* LOGIN BUTTON */}
+            {/* =====================================
+                LOGIN BUTTON
+            ===================================== */}
 
             <button
               type="submit"
@@ -588,11 +634,13 @@ function LoginPage() {
               {loading ? (
                 <>
                   <span className="button-spinner"></span>
+
                   Signing in...
                 </>
               ) : (
                 <>
-                  Login 
+                  Login
+
                   <ArrowRight size={18} />
                 </>
               )}
@@ -601,42 +649,53 @@ function LoginPage() {
 
           </form>
 
-
-          {/* SIGNUP / ACCOUNT MESSAGE */}
+          {/* =====================================
+              ACCOUNT FOOTER
+          ===================================== */}
 
           <div className="account-footer">
 
             {role === "student" && (
               <p>
+
                 New student?
+
                 <Link to="/signup/student">
                   Create an account
                 </Link>
+
               </p>
             )}
 
             {role === "faculty" && (
               <p>
+
                 Faculty accounts are created by
+
                 <span className="account-info">
                   management
                 </span>
+
               </p>
             )}
 
             {role === "management" && (
               <p>
+
                 Management access is provisioned by
+
                 <span className="account-info">
                   system administrators
                 </span>
+
               </p>
             )}
 
           </div>
 
-
-          {/* SECURITY FOOTER */}
+          {/* =====================================
+              SECURITY FOOTER
+          ===================================== */}
 
           <div className="security-note">
 
@@ -652,7 +711,6 @@ function LoginPage() {
         </div>
 
       </section>
-
 
       {/* =========================================
           BOTTOM
