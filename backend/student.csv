@@ -1,0 +1,4 @@
+student_id,name,email,course,department,semester,phone
+STU001,Rahul Sharma,rahul@example.com,BCA,Computer Science,5,9876543210
+STU002,Priya Singh,priya@example.com,BCA,Computer Science,5,9876543211
+STU003,Aman Kumar,aman@example.com,BCA,Computer Science,5,9876543212

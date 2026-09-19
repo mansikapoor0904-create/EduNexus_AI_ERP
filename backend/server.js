@@ -1,75 +1,82 @@
+
+
 require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
+
 const db = require("./config/db");
+
 const authRoutes = require("./routes/auth.routes");
+const importRoutes = require("./routes/import.routes");
+const studentRoutes = require("./routes/student.routes");
 
 const app = express();
 
-
-// ==========================================
-// CORS
-// ==========================================
+/* =========================================================
+   CORS
+========================================================= */
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin:
+      process.env.FRONTEND_URL ||
+      "http://localhost:5173",
+
     credentials: true,
   })
 );
 
-
-// ==========================================
-// JSON BODY PARSER
-// ==========================================
+/* =========================================================
+   Body Parsers
+========================================================= */
 
 app.use(express.json());
 
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 
-// ==========================================
-// URL ENCODED DATA
-// ==========================================
-
-app.use(express.urlencoded({ extended: true }));
-
-
-// ==========================================
-// RATE LIMITING
-// ==========================================
+/* =========================================================
+   API Rate Limiting
+========================================================= */
 
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
+
   max: 200,
 
   standardHeaders: true,
+
   legacyHeaders: false,
 
   message: {
     success: false,
-    message: "Too many requests. Please try again later.",
+    message:
+      "Too many requests. Please try again later.",
   },
 });
 
 app.use("/api", apiLimiter);
 
-
-// ==========================================
-// ROOT ROUTE
-// ==========================================
+/* =========================================================
+   Root Route
+========================================================= */
 
 app.get("/", (req, res) => {
   res.json({
     success: true,
-    message: "EduNexus AI ERP backend is running.",
+    message:
+      "EduNexus AI ERP backend is running.",
   });
 });
 
-
-// ==========================================
-// HEALTH CHECK API
-// ==========================================
+/* =========================================================
+   Health Check
+========================================================= */
 
 app.get("/api/health", async (req, res) => {
   try {
@@ -79,34 +86,63 @@ app.get("/api/health", async (req, res) => {
 
     res.json({
       success: true,
-      message: "EduNexus AI ERP backend is healthy.",
+
+      message:
+        "EduNexus AI ERP backend is healthy.",
+
       status: "OK",
-      database: result.rows[0].database,
+
+      database:
+        result.rows[0].database,
+
       databaseConnected: true,
-      serverTime: result.rows[0].server_time,
+
+      serverTime:
+        result.rows[0].server_time,
     });
   } catch (error) {
-    console.error("Database health check failed:", error.message);
+    console.error(
+      "Database health check failed:",
+      error.message
+    );
 
     res.status(500).json({
       success: false,
-      message: "Backend is running, but database connection failed.",
+
+      message:
+        "Backend is running, but database connection failed.",
+
       databaseConnected: false,
     });
   }
 });
 
+/* =========================================================
+   Authentication Routes
+========================================================= */
 
-// ==========================================
-// AUTH ROUTES
-// ==========================================
+app.use(
+  "/api/auth",
+  authRoutes
+);
 
-app.use("/api/auth", authRoutes);
+/* =========================================================
+   Management Import Routes
+========================================================= */
 
+app.use(
+  "/api/management/import",
+  importRoutes
+);
 
-// ==========================================
-// 404 ROUTE
-// ==========================================
+app.use(
+  "/api/management/students",
+  studentRoutes
+);
+
+/* =========================================================
+   404 Handler
+========================================================= */
 
 app.use((req, res) => {
   res.status(404).json({
@@ -115,12 +151,39 @@ app.use((req, res) => {
   });
 });
 
+/* =========================================================
+   Global Error Handler
+========================================================= */
 
-// ==========================================
-// START SERVER
-// ==========================================
+app.use(
+  (error, req, res, next) => {
+    console.error(
+      "Server error:",
+      error
+    );
 
-const PORT = process.env.PORT || 5000;
+    if (res.headersSent) {
+      return next(error);
+    }
+
+    res.status(
+      error.status || 500
+    ).json({
+      success: false,
+
+      message:
+        error.message ||
+        "Internal server error.",
+    });
+  }
+);
+
+/* =========================================================
+   Start Server
+========================================================= */
+
+const PORT =
+  process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(
