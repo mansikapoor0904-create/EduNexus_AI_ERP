@@ -11,6 +11,7 @@ const db = require("./config/db");
 const authRoutes = require("./routes/auth.routes");
 const importRoutes = require("./routes/import.routes");
 const studentRoutes = require("./routes/student.routes");
+const facultyRoutes = require("./routes/faculty.routes");
 
 const app = express();
 
@@ -138,6 +139,11 @@ app.use(
 app.use(
   "/api/management/students",
   studentRoutes
+);
+
+app.use(
+  "/api/management/faculty",
+  facultyRoutes
 );
 
 /* =========================================================

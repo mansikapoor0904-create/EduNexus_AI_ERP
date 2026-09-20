@@ -1,15 +1,16 @@
+
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAccessToken } from "../../services/authService";
 import "./StudentsManagement.css";
-
+import { useAuth } from "../../context/AuthContext";
 const API_BASE_URL =
   import.meta.env.VITE_API_URL ||
   "http://localhost:5000/api";
 
 const StudentsManagement = () => {
   const navigate = useNavigate();
-
+  const { loading: authLoading, isAuthenticated } = useAuth();
   // ==========================================
   // STUDENTS
   // ==========================================
@@ -23,38 +24,25 @@ const StudentsManagement = () => {
   // ==========================================
 
   const [search, setSearch] = useState("");
-  const [department, setDepartment] =
-    useState("all");
-  const [semester, setSemester] =
-    useState("all");
-  const [status, setStatus] =
-    useState("all");
+  const [department, setDepartment] = useState("all");
+  const [semester, setSemester] = useState("all");
+  const [status, setStatus] = useState("all");
 
   // ==========================================
   // VIEW PROFILE
   // ==========================================
 
-  const [selectedStudent, setSelectedStudent] =
-    useState(null);
-
-  const [profileLoading, setProfileLoading] =
-    useState(false);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [profileLoading, setProfileLoading] = useState(false);
 
   // ==========================================
   // EDIT STUDENT
   // ==========================================
 
-  const [editingStudent, setEditingStudent] =
-    useState(null);
-
-  const [editLoading, setEditLoading] =
-    useState(false);
-
-  const [editError, setEditError] =
-    useState("");
-
-  const [editSuccess, setEditSuccess] =
-    useState("");
+  const [editingStudent, setEditingStudent] = useState(null);
+  const [editLoading, setEditLoading] = useState(false);
+  const [editError, setEditError] = useState("");
+  const [editSuccess, setEditSuccess] = useState("");
 
   const [editForm, setEditForm] = useState({
     name: "",
@@ -68,6 +56,15 @@ const StudentsManagement = () => {
   });
 
   // ==========================================
+  // DEACTIVATE / ACTIVATE
+  // ==========================================
+
+  const [confirmStudent, setConfirmStudent] = useState(null);
+  // confirmStudent = { student, action: "deactivate" | "activate" }
+  const [statusLoading, setStatusLoading] = useState(false);
+  const [statusError, setStatusError] = useState("");
+
+  // ==========================================
   // FETCH ALL STUDENTS
   // ==========================================
 
@@ -79,18 +76,14 @@ const StudentsManagement = () => {
       const token = getAccessToken();
 
       if (!token) {
-        throw new Error(
-          "Your session has expired. Please log in again."
-        );
+        throw new Error("Your session has expired. Please log in again.");
       }
 
       const response = await fetch(
         `${API_BASE_URL}/management/students`,
         {
           method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
           credentials: "include",
         }
       );
@@ -98,31 +91,23 @@ const StudentsManagement = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data.message ||
-            "Unable to fetch students."
-        );
+        throw new Error(data.message || "Unable to fetch students.");
       }
 
       setStudents(data.students || []);
     } catch (err) {
-      console.error(
-        "Fetch students error:",
-        err
-      );
-
-      setError(
-        err.message ||
-          "Unable to load students."
-      );
+      console.error("Fetch students error:", err);
+      setError(err.message || "Unable to load students.");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
+  if (!authLoading && isAuthenticated) {
     fetchStudents();
-  }, []);
+    }
+  }, [authLoading, isAuthenticated]);
 
   // ==========================================
   // FILTER OPTIONS
@@ -131,11 +116,7 @@ const StudentsManagement = () => {
   const departments = useMemo(() => {
     return [
       ...new Set(
-        students
-          .map(
-            (student) => student.department
-          )
-          .filter(Boolean)
+        students.map((s) => s.department).filter(Boolean)
       ),
     ];
   }, [students]);
@@ -144,15 +125,8 @@ const StudentsManagement = () => {
     return [
       ...new Set(
         students
-          .map(
-            (student) => student.semester
-          )
-          .filter(
-            (semester) =>
-              semester !== null &&
-              semester !== undefined &&
-              semester !== ""
-          )
+          .map((s) => s.semester)
+          .filter((v) => v !== null && v !== undefined && v !== "")
       ),
     ].sort((a, b) => a - b);
   }, [students]);
@@ -162,35 +136,24 @@ const StudentsManagement = () => {
   // ==========================================
 
   const filteredStudents = useMemo(() => {
-    const query = search
-      .trim()
-      .toLowerCase();
+    const query = search.trim().toLowerCase();
 
     return students.filter((student) => {
       const matchesSearch =
         !query ||
-        String(student.name || "")
-          .toLowerCase()
-          .includes(query) ||
-        String(student.email || "")
-          .toLowerCase()
-          .includes(query) ||
-        String(student.student_id || "")
-          .toLowerCase()
-          .includes(query);
+        String(student.name || "").toLowerCase().includes(query) ||
+        String(student.email || "").toLowerCase().includes(query) ||
+        String(student.student_id || "").toLowerCase().includes(query);
 
       const matchesDepartment =
-        department === "all" ||
-        student.department === department;
+        department === "all" || student.department === department;
 
       const matchesSemester =
         semester === "all" ||
-        String(student.semester) ===
-          String(semester);
+        String(student.semester) === String(semester);
 
       const matchesStatus =
-        status === "all" ||
-        student.status === status;
+        status === "all" || student.status === status;
 
       return (
         matchesSearch &&
@@ -199,35 +162,29 @@ const StudentsManagement = () => {
         matchesStatus
       );
     });
-  }, [
-    students,
-    search,
-    department,
-    semester,
-    status,
-  ]);
+  }, [students, search, department, semester, status]);
 
   // ==========================================
   // STATISTICS
   // ==========================================
 
   const activeCount = students.filter(
-    (student) =>
-      student.status === "active"
+    (s) => s.status === "active"
+  ).length;
+
+  const inactiveCount = students.filter(
+    (s) => s.status === "inactive"
   ).length;
 
   const pendingCount = students.filter(
-    (student) =>
-      student.status === "pending"
+    (s) => s.status === "pending"
   ).length;
 
   // ==========================================
   // VIEW STUDENT PROFILE
   // ==========================================
 
-  const handleViewStudent = async (
-    student
-  ) => {
+  const handleViewStudent = async (student) => {
     try {
       setProfileLoading(true);
       setError("");
@@ -235,21 +192,16 @@ const StudentsManagement = () => {
       const token = getAccessToken();
 
       if (!token) {
-        throw new Error(
-          "Your session has expired. Please log in again."
-        );
+        throw new Error("Your session has expired. Please log in again.");
       }
 
-      // Open modal immediately
       setSelectedStudent(student);
 
       const response = await fetch(
         `${API_BASE_URL}/management/students/${student.id}`,
         {
           method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
           credentials: "include",
         }
       );
@@ -257,33 +209,19 @@ const StudentsManagement = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data.message ||
-            "Unable to fetch student profile."
-        );
+        throw new Error(data.message || "Unable to fetch student profile.");
       }
 
       if (data.student) {
         setSelectedStudent(data.student);
       }
     } catch (err) {
-      console.error(
-        "Fetch student profile error:",
-        err
-      );
-
-      setError(
-        err.message ||
-          "Unable to load student profile."
-      );
+      console.error("Fetch student profile error:", err);
+      setError(err.message || "Unable to load student profile.");
     } finally {
       setProfileLoading(false);
     }
   };
-
-  // ==========================================
-  // CLOSE PROFILE
-  // ==========================================
 
   const closeProfile = () => {
     setSelectedStudent(null);
@@ -297,28 +235,22 @@ const StudentsManagement = () => {
   const handleEditStudent = (student) => {
     setEditError("");
     setEditSuccess("");
-
     setEditingStudent(student);
 
     setEditForm({
       name: student.name || "",
       email: student.email || "",
-      student_id:
-        student.student_id || "",
+      student_id: student.student_id || "",
       phone: student.phone || "",
       course: student.course || "",
-      department:
-        student.department || "",
+      department: student.department || "",
       semester:
-        student.semester !== null &&
-        student.semester !== undefined
+        student.semester !== null && student.semester !== undefined
           ? String(student.semester)
           : "",
-      date_of_birth:
-        student.date_of_birth || "",
+      date_of_birth: student.date_of_birth || "",
     });
 
-    // Close profile modal
     setSelectedStudent(null);
   };
 
@@ -328,20 +260,14 @@ const StudentsManagement = () => {
 
   const handleEditChange = (event) => {
     const { name, value } = event.target;
-
-    setEditForm((previous) => ({
-      ...previous,
-      [name]: value,
-    }));
+    setEditForm((prev) => ({ ...prev, [name]: value }));
   };
 
   // ==========================================
   // SAVE EDITED STUDENT
   // ==========================================
 
-  const handleSaveStudent = async (
-    event
-  ) => {
+  const handleSaveStudent = async (event) => {
     event.preventDefault();
 
     try {
@@ -352,39 +278,23 @@ const StudentsManagement = () => {
       const token = getAccessToken();
 
       if (!token) {
-        throw new Error(
-          "Your session has expired. Please log in again."
-        );
+        throw new Error("Your session has expired. Please log in again.");
       }
 
-      // -----------------------------
-      // Frontend validation
-      // -----------------------------
-
       if (!editForm.name.trim()) {
-        setEditError(
-          "Student name is required."
-        );
+        setEditError("Student name is required.");
         return;
       }
 
       if (!editForm.email.trim()) {
-        setEditError(
-          "Student email is required."
-        );
+        setEditError("Student email is required.");
         return;
       }
 
       if (!editForm.student_id.trim()) {
-        setEditError(
-          "Student ID is required."
-        );
+        setEditError("Student ID is required.");
         return;
       }
-
-      // -----------------------------
-      // Send update
-      // -----------------------------
 
       const response = await fetch(
         `${API_BASE_URL}/management/students/${editingStudent.id}`,
@@ -397,28 +307,14 @@ const StudentsManagement = () => {
           credentials: "include",
           body: JSON.stringify({
             name: editForm.name.trim(),
-            email:
-              editForm.email
-                .trim()
-                .toLowerCase(),
-            student_id:
-              editForm.student_id.trim(),
-            phone:
-              editForm.phone.trim() ||
-              null,
-            course:
-              editForm.course.trim() ||
-              null,
-            department:
-              editForm.department.trim() ||
-              null,
+            email: editForm.email.trim().toLowerCase(),
+            student_id: editForm.student_id.trim(),
+            phone: editForm.phone.trim() || null,
+            course: editForm.course.trim() || null,
+            department: editForm.department.trim() || null,
             semester:
-              editForm.semester === ""
-                ? null
-                : Number(editForm.semester),
-            date_of_birth:
-              editForm.date_of_birth ||
-              null,
+              editForm.semester === "" ? null : Number(editForm.semester),
+            date_of_birth: editForm.date_of_birth || null,
           }),
         }
       );
@@ -426,64 +322,110 @@ const StudentsManagement = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data.message ||
-            "Unable to update student."
-        );
+        throw new Error(data.message || "Unable to update student.");
       }
 
-      // -----------------------------
-      // Update local student list
-      // -----------------------------
-
       if (data.student) {
-        setStudents((previous) =>
-          previous.map((student) =>
-            student.id === data.student.id
-              ? data.student
-              : student
+        setStudents((prev) =>
+          prev.map((s) =>
+            s.id === data.student.id ? data.student : s
           )
         );
       } else {
         await fetchStudents();
       }
 
-      setEditSuccess(
-        "Student updated successfully."
-      );
+      setEditSuccess("Student updated successfully.");
 
-      // Close after successful save
       setTimeout(() => {
         setEditingStudent(null);
         setEditSuccess("");
       }, 800);
     } catch (err) {
-      console.error(
-        "Update student error:",
-        err
-      );
-
-      setEditError(
-        err.message ||
-          "Unable to update student."
-      );
+      console.error("Update student error:", err);
+      setEditError(err.message || "Unable to update student.");
     } finally {
       setEditLoading(false);
     }
   };
 
-  // ==========================================
-  // CLOSE EDIT FORM
-  // ==========================================
-
   const closeEditForm = () => {
-    if (editLoading) {
-      return;
-    }
-
+    if (editLoading) return;
     setEditingStudent(null);
     setEditError("");
     setEditSuccess("");
+  };
+
+  // ==========================================
+  // OPEN CONFIRM DIALOG
+  // ==========================================
+
+  const handleOpenConfirm = (student, action) => {
+    setStatusError("");
+    setConfirmStudent({ student, action });
+    // Close profile modal if open
+    setSelectedStudent(null);
+  };
+
+  const handleCloseConfirm = () => {
+    if (statusLoading) return;
+    setConfirmStudent(null);
+    setStatusError("");
+  };
+
+  // ==========================================
+  // CONFIRM DEACTIVATE / ACTIVATE
+  // ==========================================
+
+  const handleConfirmStatusChange = async () => {
+    if (!confirmStudent) return;
+
+    const { student, action } = confirmStudent;
+    const newStatus = action === "deactivate" ? "inactive" : "active";
+
+    try {
+      setStatusLoading(true);
+      setStatusError("");
+
+      const token = getAccessToken();
+
+      if (!token) {
+        throw new Error("Your session has expired. Please log in again.");
+      }
+
+      const response = await fetch(
+        `${API_BASE_URL}/management/students/${student.id}/status`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Unable to update student status.");
+      }
+
+      // Update local list immediately
+      setStudents((prev) =>
+        prev.map((s) =>
+          s.id === student.id ? { ...s, status: newStatus } : s
+        )
+      );
+
+      setConfirmStudent(null);
+    } catch (err) {
+      console.error("Status change error:", err);
+      setStatusError(err.message || "Unable to update student status.");
+    } finally {
+      setStatusLoading(false);
+    }
   };
 
   // ==========================================
@@ -498,16 +440,10 @@ const StudentsManagement = () => {
       ====================================== */}
 
       <div className="students-header">
-
         <div>
-
           <button
             className="students-back-button"
-            onClick={() =>
-              navigate(
-                "/management/dashboard"
-              )
-            }
+            onClick={() => navigate("/management/dashboard")}
           >
             ← Back to Dashboard
           </button>
@@ -515,23 +451,16 @@ const StudentsManagement = () => {
           <h1>Students</h1>
 
           <p>
-            Manage student records,
-            profiles and account status.
+            Manage student records, profiles and account status.
           </p>
-
         </div>
 
         <button
           className="add-student-button"
-          onClick={() =>
-            navigate(
-              "/management/import"
-            )
-          }
+          onClick={() => navigate("/management/import")}
         >
           + Add / Import Students
         </button>
-
       </div>
 
       {/* =====================================
@@ -542,34 +471,27 @@ const StudentsManagement = () => {
 
         <div className="student-stat-card">
           <span>Total Students</span>
-
-          <strong>
-            {students.length}
-          </strong>
+          <strong>{students.length}</strong>
         </div>
 
-        <div className="student-stat-card">
+        <div className="student-stat-card stat-active">
           <span>Active</span>
-
-          <strong>
-            {activeCount}
-          </strong>
+          <strong>{activeCount}</strong>
         </div>
 
-        <div className="student-stat-card">
-          <span>Pending</span>
+        <div className="student-stat-card stat-inactive">
+          <span>Inactive</span>
+          <strong>{inactiveCount}</strong>
+        </div>
 
-          <strong>
-            {pendingCount}
-          </strong>
+        <div className="student-stat-card stat-pending">
+          <span>Pending</span>
+          <strong>{pendingCount}</strong>
         </div>
 
         <div className="student-stat-card">
           <span>Showing</span>
-
-          <strong>
-            {filteredStudents.length}
-          </strong>
+          <strong>{filteredStudents.length}</strong>
         </div>
 
       </div>
@@ -584,77 +506,39 @@ const StudentsManagement = () => {
           type="text"
           placeholder="Search name, email or student ID..."
           value={search}
-          onChange={(event) =>
-            setSearch(event.target.value)
-          }
+          onChange={(e) => setSearch(e.target.value)}
           className="student-search"
         />
 
         <select
           value={department}
-          onChange={(event) =>
-            setDepartment(event.target.value)
-          }
+          onChange={(e) => setDepartment(e.target.value)}
         >
-          <option value="all">
-            All Departments
-          </option>
-
+          <option value="all">All Departments</option>
           {departments.map((item) => (
-            <option
-              value={item}
-              key={item}
-            >
-              {item}
-            </option>
+            <option value={item} key={item}>{item}</option>
           ))}
         </select>
 
         <select
           value={semester}
-          onChange={(event) =>
-            setSemester(event.target.value)
-          }
+          onChange={(e) => setSemester(e.target.value)}
         >
-          <option value="all">
-            All Semesters
-          </option>
-
+          <option value="all">All Semesters</option>
           {semesters.map((item) => (
-            <option
-              value={item}
-              key={item}
-            >
-              Semester {item}
-            </option>
+            <option value={item} key={item}>Semester {item}</option>
           ))}
         </select>
 
         <select
           value={status}
-          onChange={(event) =>
-            setStatus(event.target.value)
-          }
+          onChange={(e) => setStatus(e.target.value)}
         >
-          <option value="all">
-            All Status
-          </option>
-
-          <option value="active">
-            Active
-          </option>
-
-          <option value="pending">
-            Pending
-          </option>
-
-          <option value="inactive">
-            Inactive
-          </option>
-
-          <option value="suspended">
-            Suspended
-          </option>
+          <option value="all">All Status</option>
+          <option value="active">Active</option>
+          <option value="pending">Pending</option>
+          <option value="inactive">Inactive</option>
+          <option value="suspended">Suspended</option>
         </select>
 
       </div>
@@ -664,9 +548,7 @@ const StudentsManagement = () => {
       ====================================== */}
 
       {error && (
-        <div className="students-error">
-          {error}
-        </div>
+        <div className="students-error">{error}</div>
       )}
 
       {/* =====================================
@@ -676,30 +558,17 @@ const StudentsManagement = () => {
       <div className="students-table-card">
 
         {loading ? (
-          <div className="students-loading">
-            Loading students...
-          </div>
-        ) : filteredStudents.length ===
-          0 ? (
+          <div className="students-loading">Loading students...</div>
+        ) : filteredStudents.length === 0 ? (
           <div className="students-empty">
-
-            <h3>
-              No students found
-            </h3>
-
-            <p>
-              Try changing your search or
-              filter criteria.
-            </p>
-
+            <h3>No students found</h3>
+            <p>Try changing your search or filter criteria.</p>
           </div>
         ) : (
           <div className="students-table-wrapper">
-
             <table className="students-table">
 
               <thead>
-
                 <tr>
                   <th>Student</th>
                   <th>Student ID</th>
@@ -707,60 +576,37 @@ const StudentsManagement = () => {
                   <th>Department</th>
                   <th>Semester</th>
                   <th>Status</th>
-                  <th>Action</th>
+                  <th>Actions</th>
                 </tr>
-
               </thead>
 
               <tbody>
+                {filteredStudents.map((student) => {
+                  const isActive = student.status === "active";
+                  const isInactive = student.status === "inactive";
 
-                {filteredStudents.map(
-                  (student) => (
-                    <tr key={student.id}>
-
+                  return (
+                    <tr
+                      key={student.id}
+                      className={isInactive ? "row-inactive" : ""}
+                    >
                       <td>
-
                         <div className="student-name-cell">
-
-                          <div className="student-avatar">
-                            {String(
-                              student.name ||
-                                "S"
-                            )
+                          <div className={`student-avatar ${isInactive ? "avatar-inactive" : ""}`}>
+                            {String(student.name || "S")
                               .charAt(0)
                               .toUpperCase()}
                           </div>
-
                           <div>
-
-                            <strong>
-                              {student.name}
-                            </strong>
-
-                            <span>
-                              {student.email}
-                            </span>
-
+                            <strong>{student.name}</strong>
+                            <span>{student.email}</span>
                           </div>
-
                         </div>
-
                       </td>
 
-                      <td>
-                        {student.student_id}
-                      </td>
-
-                      <td>
-                        {student.course ||
-                          "—"}
-                      </td>
-
-                      <td>
-                        {student.department ||
-                          "—"}
-                      </td>
-
+                      <td>{student.student_id}</td>
+                      <td>{student.course || "—"}</td>
+                      <td>{student.department || "—"}</td>
                       <td>
                         {student.semester
                           ? `Sem ${student.semester}`
@@ -768,42 +614,56 @@ const StudentsManagement = () => {
                       </td>
 
                       <td>
-
                         <span
                           className={`student-status ${String(
-                            student.status ||
-                              "pending"
+                            student.status || "pending"
                           ).toLowerCase()}`}
                         >
-                          {student.status ||
-                            "pending"}
+                          {student.status || "pending"}
                         </span>
-
                       </td>
 
                       <td>
+                        <div className="action-buttons">
 
-                        <button
-                          className="view-student-button"
-                          onClick={() =>
-                            handleViewStudent(
-                              student
-                            )
-                          }
-                        >
-                          View
-                        </button>
+                          {/* VIEW */}
+                          <button
+                            className="view-student-button"
+                            onClick={() => handleViewStudent(student)}
+                          >
+                            View
+                          </button>
 
+                          {/* DEACTIVATE / ACTIVATE */}
+                          {isActive ? (
+                            <button
+                              className="deactivate-button"
+                              onClick={() =>
+                                handleOpenConfirm(student, "deactivate")
+                              }
+                            >
+                              Deactivate
+                            </button>
+                          ) : (
+                            <button
+                              className="activate-button"
+                              onClick={() =>
+                                handleOpenConfirm(student, "activate")
+                              }
+                            >
+                              Activate
+                            </button>
+                          )}
+
+                        </div>
                       </td>
 
                     </tr>
-                  )
-                )}
-
+                  );
+                })}
               </tbody>
 
             </table>
-
           </div>
         )}
 
@@ -818,41 +678,22 @@ const StudentsManagement = () => {
           className="student-modal-overlay"
           onClick={closeProfile}
         >
-
           <div
             className="student-modal"
-            onClick={(event) =>
-              event.stopPropagation()
-            }
+            onClick={(e) => e.stopPropagation()}
           >
-
-            {/* MODAL HEADER */}
-
             <div className="student-modal-header">
-
               <div>
-
-                <h2>
-                  {selectedStudent.name}
-                </h2>
-
-                <p>
-                  Student ID:{" "}
-                  {selectedStudent.student_id}
-                </p>
-
+                <h2>{selectedStudent.name}</h2>
+                <p>Student ID: {selectedStudent.student_id}</p>
               </div>
-
               <button
                 className="close-modal-button"
                 onClick={closeProfile}
               >
                 ×
               </button>
-
             </div>
-
-            {/* PROFILE */}
 
             {profileLoading ? (
               <div className="students-loading">
@@ -864,100 +705,92 @@ const StudentsManagement = () => {
 
                   <div>
                     <span>Email</span>
-
-                    <strong>
-                      {selectedStudent.email ||
-                        "—"}
-                    </strong>
+                    <strong>{selectedStudent.email || "—"}</strong>
                   </div>
 
                   <div>
                     <span>Phone</span>
-
-                    <strong>
-                      {selectedStudent.phone ||
-                        "—"}
-                    </strong>
+                    <strong>{selectedStudent.phone || "—"}</strong>
                   </div>
 
                   <div>
                     <span>Course</span>
-
-                    <strong>
-                      {selectedStudent.course ||
-                        "—"}
-                    </strong>
+                    <strong>{selectedStudent.course || "—"}</strong>
                   </div>
 
                   <div>
                     <span>Department</span>
-
-                    <strong>
-                      {selectedStudent.department ||
-                        "—"}
-                    </strong>
+                    <strong>{selectedStudent.department || "—"}</strong>
                   </div>
 
                   <div>
                     <span>Semester</span>
-
-                    <strong>
-                      {selectedStudent.semester ||
-                        "—"}
-                    </strong>
+                    <strong>{selectedStudent.semester || "—"}</strong>
                   </div>
 
                   <div>
                     <span>Account Status</span>
-
                     <strong>
-                      {selectedStudent.status ||
-                        "pending"}
+                      <span
+                        className={`student-status ${String(
+                          selectedStudent.status || "pending"
+                        ).toLowerCase()}`}
+                      >
+                        {selectedStudent.status || "pending"}
+                      </span>
                     </strong>
                   </div>
 
                   <div>
                     <span>Email Verified</span>
-
                     <strong>
-                      {selectedStudent.email_verified
-                        ? "Yes"
-                        : "No"}
+                      {selectedStudent.email_verified ? "Yes" : "No"}
                     </strong>
                   </div>
 
                   <div>
                     <span>Date of Birth</span>
-
-                    <strong>
-                      {selectedStudent.date_of_birth ||
-                        "—"}
-                    </strong>
+                    <strong>{selectedStudent.date_of_birth || "—"}</strong>
                   </div>
 
                 </div>
 
-                {/* EDIT BUTTON */}
-
+                {/* PROFILE ACTIONS */}
                 <div className="student-profile-actions">
 
                   <button
                     className="edit-student-button"
-                    onClick={() =>
-                      handleEditStudent(
-                        selectedStudent
-                      )
-                    }
+                    onClick={() => handleEditStudent(selectedStudent)}
                   >
                     Edit Student
                   </button>
+
+                  {/* Deactivate / Activate from profile */}
+                  {selectedStudent.status === "active" ? (
+                    <button
+                      className="deactivate-button"
+                      onClick={() =>
+                        handleOpenConfirm(selectedStudent, "deactivate")
+                      }
+                    >
+                      Deactivate
+                    </button>
+                  ) : (
+                    <button
+                      className="activate-button"
+                      onClick={() =>
+                        handleOpenConfirm(selectedStudent, "activate")
+                      }
+                    >
+                      Activate
+                    </button>
+                  )}
 
                 </div>
               </>
             )}
 
           </div>
-
         </div>
       )}
 
@@ -970,30 +803,15 @@ const StudentsManagement = () => {
           className="student-modal-overlay"
           onClick={closeEditForm}
         >
-
           <div
             className="student-modal edit-student-modal"
-            onClick={(event) =>
-              event.stopPropagation()
-            }
+            onClick={(e) => e.stopPropagation()}
           >
-
-            {/* EDIT HEADER */}
-
             <div className="student-modal-header">
-
               <div>
-
-                <h2>
-                  Edit Student
-                </h2>
-
-                <p>
-                  Update student information
-                </p>
-
+                <h2>Edit Student</h2>
+                <p>Update student information</p>
               </div>
-
               <button
                 className="close-modal-button"
                 onClick={closeEditForm}
@@ -1001,40 +819,23 @@ const StudentsManagement = () => {
               >
                 ×
               </button>
-
             </div>
 
-            {/* EDIT ERROR */}
-
             {editError && (
-              <div className="students-error">
-                {editError}
-              </div>
+              <div className="students-error">{editError}</div>
             )}
-
-            {/* EDIT SUCCESS */}
 
             {editSuccess && (
-              <div className="student-success-message">
-                {editSuccess}
-              </div>
+              <div className="student-success-message">{editSuccess}</div>
             )}
-
-            {/* EDIT FORM */}
 
             <form
               className="student-edit-form"
               onSubmit={handleSaveStudent}
             >
 
-              {/* NAME */}
-
               <div className="student-form-group">
-
-                <label htmlFor="student-name">
-                  Full Name
-                </label>
-
+                <label htmlFor="student-name">Full Name</label>
                 <input
                   id="student-name"
                   type="text"
@@ -1044,17 +845,10 @@ const StudentsManagement = () => {
                   placeholder="Enter student name"
                   required
                 />
-
               </div>
 
-              {/* EMAIL */}
-
               <div className="student-form-group">
-
-                <label htmlFor="student-email">
-                  Email Address
-                </label>
-
+                <label htmlFor="student-email">Email Address</label>
                 <input
                   id="student-email"
                   type="email"
@@ -1064,17 +858,10 @@ const StudentsManagement = () => {
                   placeholder="Enter email address"
                   required
                 />
-
               </div>
 
-              {/* STUDENT ID */}
-
               <div className="student-form-group">
-
-                <label htmlFor="student-id">
-                  Student ID
-                </label>
-
+                <label htmlFor="student-id">Student ID</label>
                 <input
                   id="student-id"
                   type="text"
@@ -1084,17 +871,10 @@ const StudentsManagement = () => {
                   placeholder="Enter student ID"
                   required
                 />
-
               </div>
 
-              {/* PHONE */}
-
               <div className="student-form-group">
-
-                <label htmlFor="student-phone">
-                  Phone
-                </label>
-
+                <label htmlFor="student-phone">Phone</label>
                 <input
                   id="student-phone"
                   type="tel"
@@ -1103,17 +883,10 @@ const StudentsManagement = () => {
                   onChange={handleEditChange}
                   placeholder="Enter phone number"
                 />
-
               </div>
 
-              {/* COURSE */}
-
               <div className="student-form-group">
-
-                <label htmlFor="student-course">
-                  Course
-                </label>
-
+                <label htmlFor="student-course">Course</label>
                 <input
                   id="student-course"
                   type="text"
@@ -1122,17 +895,10 @@ const StudentsManagement = () => {
                   onChange={handleEditChange}
                   placeholder="e.g. BCA"
                 />
-
               </div>
 
-              {/* DEPARTMENT */}
-
               <div className="student-form-group">
-
-                <label htmlFor="student-department">
-                  Department
-                </label>
-
+                <label htmlFor="student-department">Department</label>
                 <input
                   id="student-department"
                   type="text"
@@ -1141,88 +907,37 @@ const StudentsManagement = () => {
                   onChange={handleEditChange}
                   placeholder="e.g. Computer Science"
                 />
-
               </div>
 
-              {/* SEMESTER */}
-
               <div className="student-form-group">
-
-                <label htmlFor="student-semester">
-                  Semester
-                </label>
-
+                <label htmlFor="student-semester">Semester</label>
                 <select
                   id="student-semester"
                   name="semester"
                   value={editForm.semester}
                   onChange={handleEditChange}
                 >
-
-                  <option value="">
-                    Select Semester
-                  </option>
-
-                  <option value="1">
-                    Semester 1
-                  </option>
-
-                  <option value="2">
-                    Semester 2
-                  </option>
-
-                  <option value="3">
-                    Semester 3
-                  </option>
-
-                  <option value="4">
-                    Semester 4
-                  </option>
-
-                  <option value="5">
-                    Semester 5
-                  </option>
-
-                  <option value="6">
-                    Semester 6
-                  </option>
-
-                  <option value="7">
-                    Semester 7
-                  </option>
-
-                  <option value="8">
-                    Semester 8
-                  </option>
-
+                  <option value="">Select Semester</option>
+                  {[1,2,3,4,5,6,7,8].map((n) => (
+                    <option key={n} value={String(n)}>
+                      Semester {n}
+                    </option>
+                  ))}
                 </select>
-
               </div>
 
-              {/* DATE OF BIRTH */}
-
               <div className="student-form-group">
-
-                <label htmlFor="student-dob">
-                  Date of Birth
-                </label>
-
+                <label htmlFor="student-dob">Date of Birth</label>
                 <input
                   id="student-dob"
                   type="date"
                   name="date_of_birth"
-                  value={
-                    editForm.date_of_birth
-                  }
+                  value={editForm.date_of_birth}
                   onChange={handleEditChange}
                 />
-
               </div>
 
-              {/* ACTIONS */}
-
               <div className="student-edit-actions">
-
                 <button
                   type="button"
                   className="cancel-edit-button"
@@ -1237,17 +952,116 @@ const StudentsManagement = () => {
                   className="save-student-button"
                   disabled={editLoading}
                 >
-                  {editLoading
-                    ? "Saving..."
-                    : "Save Changes"}
+                  {editLoading ? "Saving..." : "Save Changes"}
                 </button>
-
               </div>
 
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* =====================================
+          CONFIRM DEACTIVATE / ACTIVATE DIALOG
+      ====================================== */}
+
+      {confirmStudent && (
+        <div
+          className="student-modal-overlay"
+          onClick={handleCloseConfirm}
+        >
+          <div
+            className="student-modal confirm-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+
+            {/* Icon */}
+            <div
+              className={`confirm-icon ${
+                confirmStudent.action === "deactivate"
+                  ? "confirm-icon-warn"
+                  : "confirm-icon-success"
+              }`}
+            >
+              {confirmStudent.action === "deactivate" ? "⚠" : "✓"}
+            </div>
+
+            <h2 className="confirm-title">
+              {confirmStudent.action === "deactivate"
+                ? "Deactivate Student?"
+                : "Activate Student?"}
+            </h2>
+
+            <p className="confirm-desc">
+              {confirmStudent.action === "deactivate" ? (
+                <>
+                  You are about to deactivate{" "}
+                  <strong>{confirmStudent.student.name}</strong>.
+                  <br />
+                  Their account will be set to{" "}
+                  <strong>inactive</strong>. The record will be
+                  preserved and can be reactivated at any time.
+                </>
+              ) : (
+                <>
+                  You are about to activate{" "}
+                  <strong>{confirmStudent.student.name}</strong>.
+                  <br />
+                  Their account will be set back to{" "}
+                  <strong>active</strong>.
+                </>
+              )}
+            </p>
+
+            {/* Student info row */}
+            <div className="confirm-student-info">
+              <div className="confirm-avatar">
+                {String(confirmStudent.student.name || "S")
+                  .charAt(0)
+                  .toUpperCase()}
+              </div>
+              <div>
+                <strong>{confirmStudent.student.name}</strong>
+                <span>
+                  {confirmStudent.student.student_id} ·{" "}
+                  {confirmStudent.student.department || "—"}
+                </span>
+              </div>
+            </div>
+
+            {/* Status error */}
+            {statusError && (
+              <div className="students-error">{statusError}</div>
+            )}
+
+            {/* Buttons */}
+            <div className="confirm-actions">
+              <button
+                className="cancel-edit-button"
+                onClick={handleCloseConfirm}
+                disabled={statusLoading}
+              >
+                Cancel
+              </button>
+
+              <button
+                className={
+                  confirmStudent.action === "deactivate"
+                    ? "deactivate-button deactivate-confirm-btn"
+                    : "activate-button activate-confirm-btn"
+                }
+                onClick={handleConfirmStatusChange}
+                disabled={statusLoading}
+              >
+                {statusLoading
+                  ? "Updating..."
+                  : confirmStudent.action === "deactivate"
+                  ? "Yes, Deactivate"
+                  : "Yes, Activate"}
+              </button>
+            </div>
 
           </div>
-
         </div>
       )}
 

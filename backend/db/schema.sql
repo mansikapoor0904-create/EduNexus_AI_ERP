@@ -164,6 +164,8 @@ CREATE TABLE faculty (
 
     phone VARCHAR(30),
 
+    date_of_birth DATE,
+
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,

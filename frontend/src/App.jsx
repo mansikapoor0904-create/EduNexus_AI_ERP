@@ -21,6 +21,7 @@ import RequestDemoPage from "./pages/demo/requestdemo";
 import ManagementDashboard from "./pages/ManagementDashboard/ManagementDashboard";
 import ManagementImport from "./pages/ManagementImport/ManagementImport";
 import StudentsManagement from "./pages/StudentsManagement/StudentsManagement";
+import FacultyManagement from "./pages/FacultyManagement/FacultyManagement";
 import "./App.css";
 
 
@@ -97,13 +98,18 @@ function App() {
           element={<ManagementDashboard />}
         />
         <Route
-          path="/management/import"
-          element={<ManagementImport />}
-        />
-        <Route
           path="/management/students"
           element={<StudentsManagement />}
         />
+        <Route
+          path="/management/faculty"
+          element={<FacultyManagement />}
+        />
+        <Route
+          path="/management/import"
+          element={<ManagementImport />}
+        />
+        
 
         {/* LOGIN */}
         <Route
