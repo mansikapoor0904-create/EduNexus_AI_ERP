@@ -31,14 +31,13 @@ export const clearAccessToken = () => {
  * {
  *   identifier,
  *   password,
- *   role,
+ *   
  *   rememberMe
  * }
  */
 export const loginUser = async ({
   email,
   password,
-  role,
   rememberMe = false,
 }) => {
   const response = await fetch(`${API_BASE_URL}/auth/login`, {
@@ -53,7 +52,7 @@ export const loginUser = async ({
     body: JSON.stringify({
       identifier: email,
       password,
-      role,
+      
       rememberMe,
     }),
   });

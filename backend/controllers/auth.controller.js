@@ -332,7 +332,7 @@ const login = async (req, res) => {
     identifier,
     email,
     password,
-    role,
+   
     rememberMe = false,
   } = req.body;
 
@@ -342,31 +342,15 @@ const login = async (req, res) => {
     .trim()
     .toLowerCase();
 
-  const normalizedRole = String(role || "")
-    .trim()
-    .toLowerCase();
+  
 
-  const allowedRoles = ["student", "faculty", "management", "manager", "admin"];
+  if (!loginIdentifier || !password) {
+  return res.status(400).json({
+    success: false,
+    message: "Login identifier and password are required.",
+  });
+}
 
-  if (!loginIdentifier || !password || !normalizedRole) {
-    return res.status(400).json({
-      success: false,
-      message: "Login identifier, password and role are required.",
-    });
-  }
-
-  if (!allowedRoles.includes(normalizedRole)) {
-    return res.status(400).json({
-      success: false,
-      message: "Invalid login role.",
-    });
-  }
-
-  // UI calls Management; database uses manager.
-  const databaseRole =
-    normalizedRole === "management"
-      ? "manager"
-      : normalizedRole;
 
   try {
     /*
@@ -444,65 +428,40 @@ const login = async (req, res) => {
     }
 
     // Ambiguous Student/Employee ID
-    if (result.rows.length > 1) {
-      await db.query(
-        `
-        INSERT INTO login_attempts (
-          identifier,
-          ip_address,
-          successful,
-          failure_reason
-        )
-        VALUES ($1, $2, FALSE, $3)
-        `,
-        [
-          loginIdentifier,
-          req.ip || null,
-          "AMBIGUOUS_IDENTIFIER",
-        ]
-      );
+    // Ambiguous Student/Employee ID
+if (result.rows.length > 1) {
+  await db.query(
+    `
+    INSERT INTO login_attempts (
+      identifier,
+      ip_address,
+      successful,
+      failure_reason
+    )
+    VALUES ($1, $2, FALSE, $3)
+    `,
+    [
+      loginIdentifier,
+      req.ip || null,
+      "AMBIGUOUS_IDENTIFIER",
+    ]
+  );
 
-      return res.status(401).json({
-        success: false,
-        message:
-          "This ID is associated with multiple accounts. Please use your institutional email.",
-      });
-    }
+  return res.status(401).json({
+    success: false,
+    message:
+      "This ID is associated with multiple accounts. Please use your institutional email.",
+  });
+}
 
-    const user = result.rows[0];
+// Get the matched user
+const user = result.rows[0];
 
-    // Role mismatch
-    if (user.role !== databaseRole) {
-      await db.query(
-        `
-        INSERT INTO login_attempts (
-          identifier,
-          user_id,
-          ip_address,
-          successful,
-          failure_reason
-        )
-        VALUES ($1, $2, $3, FALSE, $4)
-        `,
-        [
-          loginIdentifier,
-          user.id,
-          req.ip || null,
-          "ROLE_MISMATCH",
-        ]
-      );
-
-      return res.status(401).json({
-        success: false,
-        message: "Invalid credentials.",
-      });
-    }
-
-    // Password verification
-    const passwordMatches = await bcrypt.compare(
-      password,
-      user.password_hash
-    );
+// Password verification
+const passwordMatches = await bcrypt.compare(
+  password,
+  user.password_hash
+);
 
     if (!passwordMatches) {
       await db.query(
