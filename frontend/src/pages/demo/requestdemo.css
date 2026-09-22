@@ -2,14 +2,22 @@
   min-height: 100vh;
   position: relative;
   overflow: hidden;
+
   background: #f7f6ef;
   color: #123c35;
 }
 
+
+/* =========================
+   BACKGROUND
+========================= */
+
 .demo-background {
   position: fixed;
   inset: 0;
+
   pointer-events: none;
+
   z-index: 0;
 }
 
@@ -18,42 +26,59 @@
   inset: 0;
 
   background-image:
-    linear-gradient(rgba(18, 60, 53, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(18, 60, 53, 0.045) 1px, transparent 1px);
+    linear-gradient(
+      rgba(18, 60, 53, 0.045) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(18, 60, 53, 0.045) 1px,
+      transparent 1px
+    );
 
   background-size: 36px 36px;
 }
 
 .demo-orb {
   position: absolute;
+
   border-radius: 50%;
+
   filter: blur(80px);
 }
 
 .demo-orb-one {
   width: 380px;
   height: 380px;
+
   top: -180px;
   left: -160px;
+
   background: rgba(122, 151, 126, 0.18);
 }
 
 .demo-orb-two {
   width: 350px;
   height: 350px;
+
   right: -160px;
   bottom: -180px;
+
   background: rgba(185, 180, 143, 0.15);
 }
 
 
-/* HEADER */
+/* =========================
+   HEADER
+========================= */
 
 .demo-header {
   position: relative;
+
   z-index: 2;
 
   height: 82px;
+
   padding: 0 7%;
 
   display: flex;
@@ -61,6 +86,7 @@
   justify-content: space-between;
 
   background: rgba(255, 254, 248, 0.88);
+
   border-bottom: 1px solid rgba(18, 60, 53, 0.1);
 
   backdrop-filter: blur(16px);
@@ -69,10 +95,13 @@
 .demo-brand {
   display: flex;
   align-items: center;
+
   gap: 12px;
 
   border: none;
+
   background: transparent;
+
   cursor: pointer;
 }
 
@@ -87,6 +116,7 @@
   border-radius: 11px;
 
   background: #78927b;
+
   color: white;
 
   font-size: 21px;
@@ -101,24 +131,30 @@
 
 .demo-brand-text strong {
   font-size: 17px;
+
   color: #214b42;
 }
 
 .demo-brand-text span {
   font-size: 9px;
+
   letter-spacing: 2px;
+
   color: #78927b;
 }
 
 .demo-back {
   display: flex;
   align-items: center;
+
   gap: 7px;
 
   border: none;
+
   background: transparent;
 
   color: #49645e;
+
   font-size: 14px;
   font-weight: 600;
 
@@ -126,25 +162,34 @@
 }
 
 
-/* MAIN */
+/* =========================
+   MAIN CONTAINER
+========================= */
 
 .demo-container {
   position: relative;
+
   z-index: 1;
 
   max-width: 1180px;
+
   margin: 0 auto;
+
   padding: 75px 30px;
 
   display: grid;
+
   grid-template-columns: 0.9fr 1.1fr;
+
   gap: 70px;
 
-  align-items: center;
+  align-items: start;
 }
 
 
-/* INTRO */
+/* =========================
+   INTRO
+========================= */
 
 .demo-eyebrow {
   display: inline-block;
@@ -153,6 +198,7 @@
 
   font-size: 10px;
   font-weight: 800;
+
   letter-spacing: 3px;
 
   color: #78927b;
@@ -164,7 +210,9 @@
   max-width: 570px;
 
   font-size: clamp(42px, 5vw, 65px);
+
   line-height: 1.02;
+
   letter-spacing: -3px;
 
   color: #123c35;
@@ -176,25 +224,34 @@
 
 .demo-intro > p {
   max-width: 540px;
+
   margin: 25px 0 35px;
 
   color: #657973;
+
   font-size: 16px;
+
   line-height: 1.8;
 }
 
 
-/* AUDIENCE */
+/* =========================
+   AUDIENCE
+========================= */
 
 .demo-audience {
   display: flex;
+
   flex-direction: column;
+
   gap: 14px;
 }
 
 .audience-item {
   display: flex;
+
   align-items: center;
+
   gap: 13px;
 }
 
@@ -203,43 +260,57 @@
   height: 40px;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
+
+  flex-shrink: 0;
 
   border-radius: 11px;
 
   background: #e5eee5;
+
   color: #68856e;
 }
 
 .audience-item div:last-child {
   display: flex;
+
   flex-direction: column;
+
   gap: 3px;
 }
 
 .audience-item strong {
   font-size: 13px;
+
   color: #244e45;
 }
 
 .audience-item span {
   font-size: 12px;
+
   color: #7b8985;
 }
 
 
-/* TRUST */
+/* =========================
+   TRUST
+========================= */
 
 .demo-trust {
   display: flex;
+
   align-items: flex-start;
+
   gap: 9px;
 
   margin-top: 30px;
+
   max-width: 510px;
 
   font-size: 12px;
+
   line-height: 1.6;
 
   color: #78927b;
@@ -247,16 +318,20 @@
 
 .demo-trust svg {
   flex-shrink: 0;
+
   margin-top: 2px;
 }
 
 
-/* FORM CARD */
+/* =========================
+   FORM CARD
+========================= */
 
 .demo-form-card {
   padding: 35px;
 
   border: 1px solid rgba(18, 60, 53, 0.11);
+
   border-radius: 22px;
 
   background: rgba(255, 255, 252, 0.94);
@@ -268,8 +343,11 @@
 
 .demo-form-header span {
   font-size: 9px;
+
   font-weight: 800;
+
   letter-spacing: 2px;
+
   color: #78927b;
 }
 
@@ -277,6 +355,7 @@
   margin: 9px 0 7px;
 
   font-size: 27px;
+
   color: #163f37;
 }
 
@@ -284,43 +363,81 @@
   margin: 0 0 25px;
 
   font-size: 13px;
+
   color: #7a8985;
 }
 
 
-/* FORM */
+/* =========================
+   FORM SECTION TITLES
+========================= */
 
-form {
+.form-section-title {
+  margin-top: 7px;
+  margin-bottom: -5px;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.5px;
+
+  color: #294f47;
+}
+
+
+/* =========================
+   FORM
+========================= */
+
+.demo-form-card form {
   display: flex;
+
   flex-direction: column;
+
   gap: 17px;
 }
 
 .form-row {
   display: grid;
+
   grid-template-columns: 1fr 1fr;
+
   gap: 15px;
 }
 
 .form-group {
   display: flex;
+
   flex-direction: column;
+
   gap: 7px;
+
+  min-width: 0;
 }
 
 .form-group label {
   font-size: 11px;
+
   font-weight: 700;
+
   color: #385b53;
 }
+
+
+/* =========================
+   INPUTS
+========================= */
 
 .form-group input,
 .form-group select,
 .form-group textarea {
   width: 100%;
+
   box-sizing: border-box;
 
   border: 1px solid #dce3dc;
+
   border-radius: 10px;
 
   padding: 12px 13px;
@@ -330,63 +447,132 @@ form {
   background: #fbfcf8;
 
   color: #244d44;
+
   font-family: inherit;
+
   font-size: 13px;
 
-  transition: 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #a1aaa6;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   border-color: #78927b;
-  box-shadow: 0 0 0 3px rgba(120, 146, 123, 0.12);
+
+  box-shadow:
+    0 0 0 3px rgba(120, 146, 123, 0.12);
 }
 
 .form-group textarea {
   resize: vertical;
-  min-height: 90px;
-}
 
-.input-with-icon {
-  position: relative;
-}
-
-.input-with-icon svg {
-  position: absolute;
-  left: 13px;
-  top: 50%;
-  transform: translateY(-50%);
-
-  color: #8a9b94;
-}
-
-.input-with-icon input {
-  padding-left: 39px;
+  min-height: 100px;
 }
 
 
-/* SUBMIT */
+
+
+
+/* =========================
+   CHECKBOX INTERESTS
+========================= */
+
+.interest-grid {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 9px;
+}
+
+.interest-option {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  min-height: 40px;
+
+  padding: 9px 11px;
+
+  border: 1px solid #e0e6df;
+
+  border-radius: 9px;
+
+  background: #fbfcf8;
+
+  color: #49645e;
+
+  font-size: 12px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.interest-option:hover {
+  border-color: #78927b;
+
+  background: #f3f7f1;
+}
+
+.interest-option input {
+  width: 15px;
+
+  height: 15px;
+
+  margin: 0;
+
+  accent-color: #29483f;
+
+  cursor: pointer;
+}
+
+.interest-option span {
+  line-height: 1.3;
+}
+
+
+/* =========================
+   SUBMIT
+========================= */
 
 .demo-submit {
   width: 100%;
 
   margin-top: 5px;
+
   padding: 14px 18px;
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
+
   gap: 9px;
 
   border: none;
+
   border-radius: 11px;
 
   background: #29483f;
+
   color: white;
 
   font-family: inherit;
+
   font-size: 13px;
+
   font-weight: 700;
 
   cursor: pointer;
@@ -396,28 +582,225 @@ form {
 
 .demo-submit:hover {
   transform: translateY(-2px);
+
   background: #1f3b34;
-  box-shadow: 0 12px 25px rgba(35, 65, 55, 0.16);
+
+  box-shadow:
+    0 12px 25px rgba(35, 65, 55, 0.16);
 }
+
+.demo-submit:active {
+  transform: translateY(0);
+}
+
+
+/* =========================
+   FORM NOTE
+========================= */
 
 .form-note {
   margin: 0;
 
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 5px;
+
   text-align: center;
 
   font-size: 10px;
+
   line-height: 1.5;
 
   color: #98a29f;
 }
 
+.form-note svg {
+  flex-shrink: 0;
+}
 
-/* RESPONSIVE */
+
+/* =========================
+   SUCCESS SCREEN
+========================= */
+
+.demo-success-section {
+  position: relative;
+
+  z-index: 1;
+
+  min-height: calc(100vh - 82px);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 60px 25px;
+}
+
+.demo-success-card {
+  width: 100%;
+
+  max-width: 620px;
+
+  padding: 55px 50px;
+
+  text-align: center;
+
+  border: 1px solid rgba(18, 60, 53, 0.11);
+
+  border-radius: 24px;
+
+  background: rgba(255, 255, 252, 0.95);
+
+  box-shadow:
+    0 25px 70px rgba(35, 65, 55, 0.08);
+}
+
+.success-icon {
+  width: 78px;
+  height: 78px;
+
+  margin: 0 auto 25px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #e5eee5;
+
+  color: #557761;
+}
+
+.demo-success-card h1 {
+  margin: 8px 0 16px;
+
+  font-size: 38px;
+
+  line-height: 1.15;
+
+  letter-spacing: -1.5px;
+
+  color: #163f37;
+}
+
+.demo-success-card > p {
+  max-width: 500px;
+
+  margin: 0 auto;
+
+  color: #6f7f7a;
+
+  font-size: 14px;
+
+  line-height: 1.8;
+}
+
+.success-details {
+  margin: 28px 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+
+  text-align: left;
+
+  padding: 18px;
+
+  border-radius: 13px;
+
+  background: #f4f7f2;
+}
+
+.success-details div {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  color: #577068;
+
+  font-size: 12px;
+}
+
+.success-details svg {
+  flex-shrink: 0;
+
+  color: #6f8c75;
+}
+
+.success-actions {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  flex-wrap: wrap;
+}
+
+.success-primary-btn,
+.success-secondary-btn {
+  padding: 12px 17px;
+
+  border-radius: 10px;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+}
+
+.success-primary-btn {
+  border: none;
+
+  background: #29483f;
+
+  color: white;
+}
+
+.success-secondary-btn {
+  border: 1px solid #d5ded6;
+
+  background: white;
+
+  color: #49645e;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
 
 @media (max-width: 900px) {
+
   .demo-container {
     grid-template-columns: 1fr;
+
     gap: 45px;
+
     padding-top: 55px;
   }
 
@@ -426,7 +809,9 @@ form {
   }
 }
 
+
 @media (max-width: 600px) {
+
   .demo-header {
     padding: 0 20px;
   }
@@ -443,8 +828,133 @@ form {
     grid-template-columns: 1fr;
   }
 
+  .interest-grid {
+    grid-template-columns: 1fr;
+  }
+
   .demo-intro h1 {
     font-size: 42px;
+
     letter-spacing: -2px;
   }
+
+  .demo-success-card {
+    padding: 40px 24px;
+  }
+
+  .demo-success-card h1 {
+    font-size: 30px;
+  }
+
+  .success-actions {
+    flex-direction: column;
+  }
+
+  .success-primary-btn,
+  .success-secondary-btn {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   INPUT WITH ICON
+========================================================= */
+
+.input-with-icon {
+  position: relative;
+
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+}
+
+
+/* ICON */
+
+.input-with-icon svg {
+  position: absolute;
+
+  left: 14px;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  width: 16px;
+
+  height: 16px;
+
+  color: #8a9890;
+
+  pointer-events: none;
+
+  z-index: 2;
+}
+
+
+/* INPUT */
+
+.input-with-icon input {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding-left: 44px !important;
+}
+
+/* =========================================================
+   FINAL INPUT ICON FIX
+========================================================= */
+
+/* Input wrapper */
+.demo-form-card .input-with-icon {
+  position: relative !important;
+
+  width: 100% !important;
+
+  display: block !important;
+}
+
+
+/* Icon inside input */
+.demo-form-card .input-with-icon > svg {
+  position: absolute !important;
+
+  left: 15px !important;
+
+  top: 50% !important;
+
+  width: 16px !important;
+
+  height: 16px !important;
+
+  transform: translateY(-50%) !important;
+
+  color: #8a9890 !important;
+
+  pointer-events: none !important;
+
+  z-index: 10 !important;
+}
+
+
+/* Input itself */
+.demo-form-card .input-with-icon > input {
+  width: 100% !important;
+
+  height: 46px !important;
+
+  box-sizing: border-box !important;
+
+  padding-top: 0 !important;
+
+  padding-right: 14px !important;
+
+  padding-bottom: 0 !important;
+
+  padding-left: 46px !important;
+
+  margin: 0 !important;
 }
