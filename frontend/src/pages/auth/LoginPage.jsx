@@ -1,6 +1,3 @@
-
-
-
 import { useState } from "react";
 
 import {
@@ -54,7 +51,6 @@ function LoginPage() {
 
     event.preventDefault();
 
-
     if (!email.trim()) {
 
       alert(
@@ -63,7 +59,6 @@ function LoginPage() {
 
       return;
     }
-
 
     if (!password.trim()) {
 
@@ -74,19 +69,13 @@ function LoginPage() {
       return;
     }
 
-
     try {
 
       setLoading(true);
 
-
       /*
-       * IMPORTANT:
-       * No Student / Faculty / Management
-       * selection is required anymore.
-       *
-       * Backend identifies the account and
-       * returns user.role.
+       * Backend identifies the account
+       * and returns user.role.
        */
 
       const response =
@@ -208,7 +197,9 @@ function LoginPage() {
 
 
       {/* =====================================
-          3D BACKGROUND
+          SOFT BACKGROUND
+          Decorative floating cards and
+          center 3D orb have been removed.
       ====================================== */}
 
       <div className="login-background">
@@ -220,100 +211,6 @@ function LoginPage() {
         <div className="background-orb orb-two" />
 
         <div className="background-orb orb-three" />
-
-
-        {/* 3D floating elements */}
-
-        <div className="login-3d-layer">
-
-
-          <div className="floating-3d-card card-student">
-
-            <div className="floating-icon">
-              <GraduationCap
-                size={22}
-              />
-            </div>
-
-            <div>
-              <span>
-                STUDENT
-              </span>
-
-              <strong>
-                Academic
-              </strong>
-            </div>
-
-          </div>
-
-
-          <div className="floating-3d-card card-faculty">
-
-            <div className="floating-icon">
-              <Users
-                size={22}
-              />
-            </div>
-
-            <div>
-              <span>
-                FACULTY
-              </span>
-
-              <strong>
-                Teaching
-              </strong>
-            </div>
-
-          </div>
-
-
-          <div className="floating-3d-card card-ai">
-
-            <div className="floating-icon">
-              <BrainCircuit
-                size={22}
-              />
-            </div>
-
-            <div>
-              <span>
-                AI ERP
-              </span>
-
-              <strong>
-                Intelligence
-              </strong>
-            </div>
-
-          </div>
-
-
-          {/* CENTER 3D ORB */}
-
-          <div className="login-orb">
-
-            <div className="login-orb-inner">
-
-              <small>
-                EDU
-              </small>
-
-              <strong>
-                NEXUS
-              </strong>
-
-              <span>
-                AI ERP
-              </span>
-
-            </div>
-
-          </div>
-
-
-        </div>
 
       </div>
 
@@ -366,10 +263,12 @@ function LoginPage() {
         <div className="login-showcase">
 
 
+          {/* SECURE BADGE */}
+
           <div className="showcase-badge">
 
             <ShieldCheck
-              size={16}
+              size={18}
             />
 
             <span>
@@ -378,6 +277,8 @@ function LoginPage() {
 
           </div>
 
+
+          {/* MAIN HEADING */}
 
           <h1>
 
@@ -394,6 +295,8 @@ function LoginPage() {
           </h1>
 
 
+          {/* DESCRIPTION */}
+
           <p>
 
             Students, faculty and management
@@ -403,17 +306,23 @@ function LoginPage() {
           </p>
 
 
-          {/* FEATURES */}
+          {/* =================================
+              FEATURES
+          ================================= */}
 
           <div className="login-features">
 
 
+            {/* STUDENTS */}
+
             <div className="login-feature">
 
               <div className="feature-icon">
+
                 <GraduationCap
-                  size={18}
+                  size={21}
                 />
+
               </div>
 
               <div>
@@ -431,12 +340,16 @@ function LoginPage() {
             </div>
 
 
+            {/* FACULTY */}
+
             <div className="login-feature">
 
               <div className="feature-icon">
+
                 <Users
-                  size={18}
+                  size={21}
                 />
+
               </div>
 
               <div>
@@ -454,12 +367,16 @@ function LoginPage() {
             </div>
 
 
+            {/* MANAGEMENT */}
+
             <div className="login-feature">
 
               <div className="feature-icon">
+
                 <BrainCircuit
-                  size={18}
+                  size={21}
                 />
+
               </div>
 
               <div>
@@ -518,7 +435,9 @@ function LoginPage() {
 
 
 
-          {/* FORM */}
+          {/* =================================
+              FORM
+          ================================= */}
 
           <form
             className="login-form"
@@ -624,7 +543,7 @@ function LoginPage() {
 
 
 
-            {/* REMEMBER */}
+            {/* REMEMBER ME */}
 
             <div className="login-options">
 
@@ -668,19 +587,23 @@ function LoginPage() {
               {loading ? (
 
                 <>
+
                   <span className="button-spinner" />
 
                   Signing in...
+
                 </>
 
               ) : (
 
                 <>
+
                   Login
 
                   <ArrowRight
                     size={18}
                   />
+
                 </>
 
               )}
@@ -692,7 +615,9 @@ function LoginPage() {
 
 
 
-          {/* ACCOUNT FOOTER */}
+          {/* =================================
+              ACCOUNT FOOTER
+          ================================= */}
 
           <div className="account-footer">
 
@@ -708,7 +633,9 @@ function LoginPage() {
 
 
 
-          {/* SECURITY */}
+          {/* =================================
+              SECURITY
+          ================================= */}
 
           <div className="security-note">
 
