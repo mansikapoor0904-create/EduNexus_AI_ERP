@@ -1,10 +1,9 @@
-
-
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
 
+// Pages
 import LandingPage from "./pages/home/LandingPage";
 import FeaturesPage from "./pages/features/FeaturesPage";
 import DashboardPage from "./pages/dashboard/DashboardPage";
@@ -15,15 +14,19 @@ import StudentSignupPage from "./pages/auth/StudentsigninPage.jsx";
 import FacultyInvitationPage from "./pages/auth/FacultyInvitationPage";
 import ManagementAccessRequestPage from "./pages/auth/ManagementAccessRequestPage";
 
-
-
 import RequestDemoPage from "./pages/demo/requestdemo";
+
 import ManagementDashboard from "./pages/ManagementDashboard/ManagementDashboard";
 import ManagementImport from "./pages/ManagementImport/ManagementImport";
 import StudentsManagement from "./pages/StudentsManagement/StudentsManagement";
 import FacultyManagement from "./pages/FacultyManagement/FacultyManagement";
+
 import "./App.css";
 
+
+// ---------------------------------------------
+// ABOUT PAGE
+// ---------------------------------------------
 
 function AboutPage() {
   return (
@@ -47,6 +50,10 @@ function AboutPage() {
 }
 
 
+// ---------------------------------------------
+// PRICING PAGE
+// ---------------------------------------------
+
 function PricingPage() {
   return (
     <main className="simple-page">
@@ -67,97 +74,179 @@ function PricingPage() {
 }
 
 
+// ---------------------------------------------
+// MAIN APP
+// ---------------------------------------------
+
 function App() {
+
+  const location = useLocation();
+
+  // Pages where Navbar should NOT appear
+  const hideNavbar =
+    location.pathname === "/login" ||
+    location.pathname.startsWith("/management") ||
+    location.pathname.startsWith("/faculty") ||
+    location.pathname.startsWith("/student");
+
+  // Pages where Footer should NOT appear
+  const hideFooter =
+    location.pathname === "/login" ||
+    location.pathname.startsWith("/management") ||
+    location.pathname.startsWith("/faculty") ||
+    location.pathname.startsWith("/student");
+
   return (
     <div className="app">
 
-      <Navbar />
+      {/* NAVBAR */}
+
+      {!hideNavbar && <Navbar />}
+
+
+      {/* ROUTES */}
 
       <Routes>
 
+        {/* -------------------------------- */}
         {/* HOME */}
+        {/* -------------------------------- */}
+
         <Route
           path="/"
           element={<LandingPage />}
         />
 
+
+        {/* -------------------------------- */}
         {/* FEATURES */}
+        {/* -------------------------------- */}
+
         <Route
           path="/features"
           element={<FeaturesPage />}
         />
 
-        {/* DASHBOARD */}
+
+        {/* -------------------------------- */}
+        {/* GENERAL DASHBOARD */}
+        {/* -------------------------------- */}
+
         <Route
           path="/dashboard"
           element={<DashboardPage />}
         />
-        {/* MANAGEMENT DASHBOARD */}
+
+
+        {/* -------------------------------- */}
+        {/* MANAGEMENT */}
+        {/* -------------------------------- */}
+
         <Route
           path="/management/dashboard"
           element={<ManagementDashboard />}
         />
+
         <Route
           path="/management/students"
           element={<StudentsManagement />}
         />
+
         <Route
           path="/management/faculty"
           element={<FacultyManagement />}
         />
+
         <Route
           path="/management/import"
           element={<ManagementImport />}
         />
-        
 
+
+        {/* -------------------------------- */}
         {/* LOGIN */}
+        {/* -------------------------------- */}
+
         <Route
           path="/login"
           element={<LoginPage />}
         />
 
+
+        {/* -------------------------------- */}
         {/* GET STARTED */}
+        {/* -------------------------------- */}
+
         <Route
           path="/get-started"
           element={<GetStartedPage />}
         />
 
+
+        {/* -------------------------------- */}
         {/* STUDENT SIGNUP */}
+        {/* -------------------------------- */}
+
         <Route
           path="/signup/student"
           element={<StudentSignupPage />}
         />
+
+
+        {/* -------------------------------- */}
+        {/* FACULTY */}
+        {/* -------------------------------- */}
 
         <Route
           path="/faculty-invitation"
           element={<FacultyInvitationPage />}
         />
 
+
+        {/* -------------------------------- */}
+        {/* MANAGEMENT ACCESS */}
+        {/* -------------------------------- */}
+
         <Route
           path="/management-access"
           element={<ManagementAccessRequestPage />}
         />
 
+
+        {/* -------------------------------- */}
         {/* REQUEST DEMO */}
+        {/* -------------------------------- */}
+
         <Route
           path="/request-demo"
           element={<RequestDemoPage />}
         />
 
+
+        {/* -------------------------------- */}
         {/* ABOUT */}
+        {/* -------------------------------- */}
+
         <Route
           path="/about"
           element={<AboutPage />}
         />
 
+
+        {/* -------------------------------- */}
         {/* PRICING */}
+        {/* -------------------------------- */}
+
         <Route
           path="/pricing"
           element={<PricingPage />}
         />
 
+
+        {/* -------------------------------- */}
         {/* UNKNOWN URL */}
+        {/* -------------------------------- */}
+
         <Route
           path="*"
           element={<Navigate to="/" replace />}
@@ -165,11 +254,13 @@ function App() {
 
       </Routes>
 
-      <Footer />
+
+      {/* FOOTER */}
+
+      {!hideFooter && <Footer />}
 
     </div>
   );
 }
-
 
 export default App;
