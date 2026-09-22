@@ -102,7 +102,7 @@ function LandingPage() {
 
             <div className="hero-badge">
               <span className="badge-dot" />
-              AI-POWERED COLLEGE ERP
+              ENTERPRISE RESOURCE PLANNING
             </div>
 
             <h1>

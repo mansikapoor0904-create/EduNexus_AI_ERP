@@ -1,24 +1,62 @@
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import {
+  ArrowLeft,
+  BriefcaseBusiness,
+  CheckCircle2,
+  FileSpreadsheet,
+  FileUp,
+  GraduationCap,
+  UploadCloud,
+  X,
+  AlertCircle,
+} from "lucide-react";
 
-
-import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   previewImport,
   commitImport,
 } from "../../services/importService";
+
 import "./ManagementImport.css";
+
+const IMPORT_TYPES = {
+  student: {
+    title: "Import Student Records",
+    shortTitle: "Students",
+    description:
+      "Upload student enrollment, academic, and account records in one organized workspace.",
+    cardDescription: "Import student records",
+    entityName: "student",
+    entityPlural: "students",
+    requiredFields: ["name", "email", "student_id"],
+    Icon: GraduationCap,
+  },
+
+  faculty: {
+    title: "Import Faculty Records",
+    shortTitle: "Faculty",
+    description:
+      "Upload faculty profiles, department assignments, and account records in one organized workspace.",
+    cardDescription: "Import faculty records",
+    entityName: "faculty",
+    entityPlural: "faculty members",
+    requiredFields: ["name", "email", "employee_id"],
+    Icon: BriefcaseBusiness,
+  },
+};
 
 const ManagementImport = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const fileInputRef = useRef(null);
 
-  // ============================================
-  // STATE
-  // ============================================
+  const queryType = searchParams.get("type");
 
-  const [type, setType] = useState("student");
+  const [type, setType] = useState(
+    queryType === "faculty" ? "faculty" : "student"
+  );
+
   const [file, setFile] = useState(null);
-
   const [loading, setLoading] = useState(false);
   const [importing, setImporting] = useState(false);
 
@@ -28,9 +66,22 @@ const ManagementImport = () => {
   const [error, setError] = useState("");
   const [dragOver, setDragOver] = useState(false);
 
-  // ============================================
-  // VALIDATE FILE (by name OR mime type)
-  // ============================================
+  const config = IMPORT_TYPES[type];
+  const TypeIcon = config.Icon;
+
+  useEffect(() => {
+    const currentType = searchParams.get("type");
+
+    if (currentType === "student" || currentType === "faculty") {
+      setType(currentType);
+    }
+  }, [searchParams]);
+
+  const clearResults = () => {
+    setError("");
+    setResult(null);
+    setImportResult(null);
+  };
 
   const isValidFile = (selectedFile) => {
     if (!selectedFile) return false;
@@ -38,13 +89,11 @@ const ManagementImport = () => {
     const fileName = selectedFile.name.toLowerCase();
     const mimeType = selectedFile.type;
 
-    // Check by extension
     const validExtension =
       fileName.endsWith(".csv") ||
       fileName.endsWith(".xlsx") ||
       fileName.endsWith(".xls");
 
-    // Check by MIME type (handles files with no extension)
     const validMime =
       mimeType === "text/csv" ||
       mimeType === "application/csv" ||
@@ -52,36 +101,26 @@ const ManagementImport = () => {
       mimeType === "application/vnd.ms-excel" ||
       mimeType ===
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
-      mimeType === "" || // Some OS don't set mime for csv
-      mimeType === "application/octet-stream"; // Generic binary
+      mimeType === "" ||
+      mimeType === "application/octet-stream";
 
     return validExtension || validMime;
   };
 
-  // ============================================
-  // FILE SELECTION
-  // ============================================
-
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files?.[0];
-
-    setError("");
-    setResult(null);
-    setImportResult(null);
+  const selectFile = (selectedFile) => {
+    clearResults();
 
     if (!selectedFile) {
       setFile(null);
       return;
     }
 
-    // Size check - 10 MB
     if (selectedFile.size > 10 * 1024 * 1024) {
       setFile(null);
       setError("File size must be less than 10 MB.");
       return;
     }
 
-    // Validate file type
     if (!isValidFile(selectedFile)) {
       setFile(null);
       setError(
@@ -93,14 +132,17 @@ const ManagementImport = () => {
     setFile(selectedFile);
   };
 
-  // ============================================
-  // DRAG AND DROP
-  // ============================================
+  const handleFileChange = (event) => {
+    selectFile(event.target.files?.[0]);
+  };
 
   const handleDragOver = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    setDragOver(true);
+
+    if (!loading && !importing) {
+      setDragOver(true);
+    }
   };
 
   const handleDragLeave = (event) => {
@@ -116,86 +158,55 @@ const ManagementImport = () => {
 
     if (loading || importing) return;
 
-    const droppedFile = event.dataTransfer.files?.[0];
-
-    setError("");
-    setResult(null);
-    setImportResult(null);
-
-    if (!droppedFile) return;
-
-    if (droppedFile.size > 10 * 1024 * 1024) {
-      setError("File size must be less than 10 MB.");
-      return;
-    }
-
-    if (!isValidFile(droppedFile)) {
-      setError(
-        "Only CSV (.csv) and Excel (.xlsx, .xls) files are allowed."
-      );
-      return;
-    }
-
-    setFile(droppedFile);
+    selectFile(event.dataTransfer.files?.[0]);
   };
 
-  // ============================================
-  // CHANGE TYPE
-  // ============================================
-
   const handleTypeChange = (newType) => {
-    setType(newType);
-    setFile(null);
-    setResult(null);
-    setImportResult(null);
-    setError("");
+    if (loading || importing) return;
 
-    // Reset file input
+    setType(newType);
+    setSearchParams({ type: newType });
+
+    setFile(null);
+    clearResults();
+
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
-
-  // ============================================
-  // REMOVE SELECTED FILE
-  // ============================================
 
   const handleRemoveFile = (event) => {
     event.preventDefault();
     event.stopPropagation();
 
     setFile(null);
-    setResult(null);
-    setImportResult(null);
-    setError("");
+    clearResults();
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
-  // ============================================
-  // PREVIEW & VALIDATE
-  // ============================================
-
   const handlePreview = async () => {
-    setError("");
-    setImportResult(null);
+    clearResults();
 
     if (!file) {
-      setError("Please select a CSV or XLSX file.");
+      setError(`Please select a file containing ${config.entityPlural}.`);
       return;
     }
 
     try {
       setLoading(true);
 
-      const data = await previewImport({ type, file });
+      const data = await previewImport({
+        type,
+        file,
+      });
 
       setResult(data);
     } catch (err) {
       console.error("Preview import error:", err);
-      setResult(null);
+
       setError(
         err.message || "Unable to process the uploaded file."
       );
@@ -204,10 +215,6 @@ const ManagementImport = () => {
     }
   };
 
-  // ============================================
-  // CONFIRM IMPORT
-  // ============================================
-
   const handleConfirmImport = async () => {
     if (importing) return;
 
@@ -215,30 +222,29 @@ const ManagementImport = () => {
     setImportResult(null);
 
     if (!file) {
-      setError("Please select a CSV or XLSX file.");
+      setError(`Please select a file containing ${config.entityPlural}.`);
       return;
     }
 
     if (!result?.summary?.valid) {
-      setError(
-        "Please fix all validation errors before importing."
-      );
+      setError("Please fix all validation errors before importing.");
       return;
     }
 
     try {
       setImporting(true);
 
-      const data = await commitImport({ type, file });
-
-      console.log("Import successful:", data);
+      const data = await commitImport({
+        type,
+        file,
+      });
 
       setImportResult(data);
 
-      // Save to localStorage for dashboard
       try {
         const existing = JSON.parse(
-          localStorage.getItem("importedData") || '{"students":[],"faculty":[]}'
+          localStorage.getItem("importedData") ||
+            '{"students":[],"faculty":[]}'
         );
 
         if (type === "student" && data.records) {
@@ -246,7 +252,9 @@ const ManagementImport = () => {
             ...existing.students,
             ...data.records,
           ];
-        } else if (type === "faculty" && data.records) {
+        }
+
+        if (type === "faculty" && data.records) {
           existing.faculty = [
             ...existing.faculty,
             ...data.records,
@@ -257,12 +265,12 @@ const ManagementImport = () => {
           "importedData",
           JSON.stringify(existing)
         );
-      } catch (storageErr) {
-        console.warn("LocalStorage save failed:", storageErr);
+      } catch (storageError) {
+        console.warn("LocalStorage save failed:", storageError);
       }
-
     } catch (err) {
       console.error("Confirm import error:", err);
+
       setError(
         err.message || "Unable to import the records."
       );
@@ -271,416 +279,492 @@ const ManagementImport = () => {
     }
   };
 
-  // ============================================
-  // GET FILE ICON
-  // ============================================
-
-  const getFileIcon = (fileName) => {
-    if (!fileName) return "📄";
-    const name = fileName.toLowerCase();
-    if (name.endsWith(".csv")) return "📊";
-    if (name.endsWith(".xlsx") || name.endsWith(".xls"))
-      return "📗";
-    return "📄";
-  };
-
-  // ============================================
-  // FORMAT FILE SIZE
-  // ============================================
-
   const formatFileSize = (bytes) => {
     if (!bytes) return "";
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024)
+
+    if (bytes < 1024) {
+      return `${bytes} B`;
+    }
+
+    if (bytes < 1024 * 1024) {
       return `${(bytes / 1024).toFixed(1)} KB`;
+    }
+
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
-  // ============================================
-  // RENDER
-  // ============================================
+  const getFileIcon = (fileName) => {
+    if (!fileName) return FileUp;
+
+    const fileNameLower = fileName.toLowerCase();
+
+    if (
+      fileNameLower.endsWith(".xlsx") ||
+      fileNameLower.endsWith(".xls")
+    ) {
+      return FileSpreadsheet;
+    }
+
+    return FileUp;
+  };
+
+  const FileIcon = file ? getFileIcon(file.name) : FileUp;
+
+  const backPath =
+    type === "student"
+      ? "/management/students"
+      : "/management/faculty";
 
   return (
-    <div className="management-import-page">
-
-      {/* ======================================
-          HEADER
-      ====================================== */}
-
-      <div className="import-header">
-        <div>
+    <main
+      className={`management-import-page ${
+        type === "student"
+          ? "import-student-mode"
+          : "import-faculty-mode"
+      }`}
+    >
+      <div className="import-shell">
+        {/* HEADER */}
+        <header className="import-page-header">
           <button
             type="button"
-            className="back-button"
-            onClick={() => navigate("/management/dashboard")}
+            className="import-back-button"
+            onClick={() => navigate(backPath)}
           >
-            ← Back to Dashboard
+            <ArrowLeft size={17} />
+            Back to{" "}
+            {type === "student"
+              ? "Student Directory"
+              : "Faculty Directory"}
           </button>
 
-          <h1>Import Data</h1>
-
-          <p>
-            Upload student or faculty records using CSV or
-            Excel files.
-          </p>
-        </div>
-      </div>
-
-      {/* ======================================
-          UPLOAD CARD
-      ====================================== */}
-
-      <div className="import-card">
-
-        {/* ── STEP 1 ── */}
-        <div className="import-step">
-          <span className="step-number">1</span>
-          <div>
-            <h2>Select Data Type</h2>
-            <p>
-              Choose the type of records you want to import.
-            </p>
+          <div className="import-kicker">
+            DATA MANAGEMENT / {config.shortTitle.toUpperCase()}
           </div>
-        </div>
 
-        {/* TYPE SELECTION */}
-        <div className="type-selection">
-
-          <button
-            type="button"
-            className={
-              type === "student" ? "type-card active" : "type-card"
-            }
-            onClick={() => handleTypeChange("student")}
-            disabled={loading || importing}
-          >
-            <div className="type-icon">🎓</div>
-            <strong>Students</strong>
-            <span>Import student records</span>
-          </button>
-
-          <button
-            type="button"
-            className={
-              type === "faculty" ? "type-card active" : "type-card"
-            }
-            onClick={() => handleTypeChange("faculty")}
-            disabled={loading || importing}
-          >
-            <div className="type-icon">👨‍🏫</div>
-            <strong>Faculty</strong>
-            <span>Import faculty records</span>
-          </button>
-
-        </div>
-
-        {/* ── STEP 2 ── */}
-        <div className="import-step">
-          <span className="step-number">2</span>
-          <div>
-            <h2>Upload File</h2>
-            <p>
-              Supported formats: <strong>.csv</strong>,{" "}
-              <strong>.xlsx</strong>, <strong>.xls</strong>
-              <br />
-              Maximum size: 10 MB
-            </p>
-          </div>
-        </div>
-
-        {/* FILE UPLOAD ZONE */}
-        <div
-          className={`file-upload-zone ${dragOver ? "drag-over" : ""} ${
-            file ? "has-file" : ""
-          } ${loading || importing ? "disabled" : ""}`}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          onClick={() => {
-            if (!loading && !importing) {
-              fileInputRef.current?.click();
-            }
-          }}
-        >
-          {/* Hidden input — accepts ALL files so OS doesn't filter */}
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="*/*"
-            onChange={handleFileChange}
-            disabled={loading || importing}
-            style={{ display: "none" }}
-          />
-
-          {file ? (
-            /* File selected state */
-            <div className="file-selected">
-              <div className="file-icon-large">
-                {getFileIcon(file.name)}
-              </div>
-
-              <div className="file-info">
-                <strong className="file-name">{file.name}</strong>
-                <span className="file-size">
-                  {formatFileSize(file.size)}
-                </span>
-              </div>
-
-              <button
-                type="button"
-                className="remove-file-btn"
-                onClick={handleRemoveFile}
-                title="Remove file"
-              >
-                ✕
-              </button>
-            </div>
-          ) : (
-            /* Empty state */
-            <div className="upload-content">
-              <div className="upload-icon-wrap">
-                <span className="upload-arrow">↑</span>
-              </div>
-
-              <strong>
-                Drag & drop your file here
-              </strong>
-
-              <span>
-                or click to browse your computer
-              </span>
-
-              <div className="upload-formats">
-                <span className="format-badge">CSV</span>
-                <span className="format-badge">XLSX</span>
-                <span className="format-badge">XLS</span>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Template download hint */}
-        <p className="template-hint">
-          💡 Make sure your file has the correct column headers.
-          Columns like <code>name</code>, <code>email</code>,{" "}
-          <code>student_id</code> / <code>employee_id</code> are
-          required.
-        </p>
-
-        {/* ERROR */}
-        {error && (
-          <div className="import-error">
-            <span>⚠</span> {error}
-          </div>
-        )}
-
-        {/* PREVIEW BUTTON */}
-        <button
-          type="button"
-          className="preview-button"
-          onClick={handlePreview}
-          disabled={!file || loading || importing}
-        >
-          {loading ? (
-            <>
-              <span className="btn-spinner" /> Processing...
-            </>
-          ) : (
-            "Preview & Validate"
-          )}
-        </button>
-
-      </div>
-
-      {/* ======================================
-          PREVIEW CARD
-      ====================================== */}
-
-      {result && (
-        <div className="preview-card">
-
-          {/* HEADER */}
-          <div className="preview-header">
+          <div className="import-header-row">
             <div>
-              <h2>Import Preview</h2>
-              <p>{result.file?.name || file?.name}</p>
-            </div>
+              <h1>{config.title}</h1>
 
-            <div
-              className={
-                result.summary?.valid
-                  ? "status-badge valid"
-                  : "status-badge invalid"
-              }
-            >
-              {result.summary?.valid ? "✓ Valid" : "✗ Needs Correction"}
+              <p>{config.description}</p>
+
+              <div className="import-header-meta">
+                <TypeIcon size={16} />
+                <span>
+                  {config.shortTitle} workspace
+                </span>
+                <span className="meta-divider">•</span>
+                <span>CSV and Excel files</span>
+                <span className="meta-divider">•</span>
+                <span>Maximum 10 MB</span>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* IMPORT CARD */}
+        <section className="import-card">
+          {/* STEP 1 */}
+          <div className="import-step">
+            <span className="step-number">1</span>
+
+            <div className="step-copy">
+              <h2>Select record type</h2>
+              <p>
+                Choose the type of records you want to add to your
+                institution.
+              </p>
             </div>
           </div>
 
-          {/* SUMMARY */}
-          <div className="summary-grid">
-
-            <div className="summary-item">
-              <span>Total Records</span>
-              <strong>{result.summary?.totalRows ?? 0}</strong>
-            </div>
-
-            <div className="summary-item">
-              <span>Preview Rows</span>
-              <strong>{result.summary?.previewRows ?? 0}</strong>
-            </div>
-
-            <div
-              className={`summary-item ${
-                (result.summary?.errorCount ?? 0) > 0
-                  ? "summary-error"
-                  : "summary-ok"
-              }`}
-            >
-              <span>Validation Errors</span>
-              <strong>{result.summary?.errorCount ?? 0}</strong>
-            </div>
-
-          </div>
-
-                    {/* VALIDATION ERRORS */}
-          {result.errors?.length > 0 && (
-            <div className="validation-errors">
-              <h3>⚠ Validation Errors — Fix Before Importing</h3>
-              <ul>
-                {result.errors.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* WARNINGS */}
-          {result.warnings?.length > 0 && (
-            <div className="validation-warnings">
-              <h3>⚠ Warnings — Import Will Still Work</h3>
-              <ul>
-                {result.warnings.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* PREVIEW TABLE */}
-          {result.preview?.length > 0 && (
-            <div className="table-wrapper">
-              <table>
-                <thead>
-                  <tr>
-                    {result.columns?.map((column) => (
-                      <th key={column}>{column}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {result.preview.map((row, rowIndex) => (
-                    <tr key={rowIndex}>
-                      {result.columns?.map((column) => (
-                        <td key={column}>
-                          {String(row[column] ?? "")}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-          {/* CONFIRM IMPORT */}
-          {result.summary?.valid && !importResult && (
+          <div className="import-type-selection">
             <button
               type="button"
-              className="confirm-button"
-              onClick={handleConfirmImport}
-              disabled={importing}
+              className={`import-type-card ${
+                type === "student" ? "active" : ""
+              }`}
+              onClick={() => handleTypeChange("student")}
+              disabled={loading || importing}
             >
-              {importing ? (
-                <>
-                  <span className="btn-spinner" /> Importing...
-                </>
-              ) : (
-                `Confirm Import — ${result.summary?.totalRows ?? 0} Records`
-              )}
+              <span className="import-type-icon">
+                <GraduationCap size={25} />
+              </span>
+
+              <strong>Students</strong>
+              <span>Enrollment and academic records</span>
             </button>
-          )}
 
-          {/* IMPORT SUCCESS */}
-          {importResult && (
-            <div className="import-success">
+            <button
+              type="button"
+              className={`import-type-card ${
+                type === "faculty" ? "active" : ""
+              }`}
+              onClick={() => handleTypeChange("faculty")}
+              disabled={loading || importing}
+            >
+              <span className="import-type-icon">
+                <BriefcaseBusiness size={25} />
+              </span>
 
-              <div className="success-icon">✓</div>
+              <strong>Faculty</strong>
+              <span>Professional and account records</span>
+            </button>
+          </div>
 
-              <h3>Import Successful!</h3>
+          {/* STEP 2 */}
+          <div className="import-step">
+            <span className="step-number">2</span>
 
+            <div className="step-copy">
+              <h2>Upload {config.entityName} file</h2>
               <p>
-                {importResult.message ||
-                  "Records imported successfully."}
+                Use a CSV or Excel file with the required columns
+                for {config.entityPlural}.
               </p>
+            </div>
+          </div>
 
-              {importResult.summary && (
-                <div className="success-summary">
+          {/* UPLOAD AREA */}
+          <div
+            className={`file-upload-zone ${
+              dragOver ? "drag-over" : ""
+            } ${file ? "has-file" : ""} ${
+              loading || importing ? "disabled" : ""
+            }`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={() => {
+              if (!loading && !importing) {
+                fileInputRef.current?.click();
+              }
+            }}
+            onKeyDown={(event) => {
+              if (
+                event.key === "Enter" ||
+                event.key === " "
+              ) {
+                fileInputRef.current?.click();
+              }
+            }}
+            role="button"
+            tabIndex={loading || importing ? -1 : 0}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".csv,.xlsx,.xls"
+              onChange={handleFileChange}
+              disabled={loading || importing}
+              hidden
+            />
 
-                  <div className="success-stat">
-                    <span>Imported</span>
-                    <strong>
-                      {importResult.summary.imported ?? 0}
-                    </strong>
-                  </div>
-
-                  <div className="success-stat">
-                    <span>Skipped</span>
-                    <strong>
-                      {importResult.summary.skipped ?? 0}
-                    </strong>
-                  </div>
-
+            {file ? (
+              <div className="file-selected">
+                <div className="file-icon-large">
+                  <FileIcon size={38} />
                 </div>
-              )}
 
-              <div className="success-actions">
+                <div className="file-info">
+                  <strong className="file-name">
+                    {file.name}
+                  </strong>
 
-                <button
-                  type="button"
-                  className="dashboard-button"
-                  onClick={() =>
-                    navigate("/management/dashboard")
-                  }
-                >
-                  Go to Dashboard
-                </button>
+                  <span className="file-size">
+                    {formatFileSize(file.size)} • Ready for preview
+                  </span>
+                </div>
 
                 <button
                   type="button"
-                  className="import-more-button"
-                  onClick={() => {
-                    setFile(null);
-                    setResult(null);
-                    setImportResult(null);
-                    setError("");
-                    if (fileInputRef.current) {
-                      fileInputRef.current.value = "";
-                    }
-                  }}
+                  className="remove-file-button"
+                  onClick={handleRemoveFile}
+                  title="Remove file"
+                  aria-label="Remove selected file"
                 >
-                  Import More
+                  <X size={17} />
                 </button>
-
               </div>
+            ) : (
+              <div className="upload-content">
+                <div className="upload-icon-wrap">
+                  <UploadCloud size={28} />
+                </div>
 
+                <strong>
+                  Drag and drop your {config.entityName} file here
+                </strong>
+
+                <span>
+                  or click to browse your computer
+                </span>
+
+                <div className="upload-formats">
+                  <span>CSV</span>
+                  <span>XLSX</span>
+                  <span>XLS</span>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* REQUIRED COLUMNS */}
+          <div className="required-columns">
+            <div className="required-columns-heading">
+              <span className="required-columns-icon">
+                <AlertCircle size={15} />
+              </span>
+
+              <strong>Required columns</strong>
+            </div>
+
+            <div className="required-column-list">
+              {config.requiredFields.map((field) => (
+                <code key={field}>{field}</code>
+              ))}
+            </div>
+          </div>
+
+          {/* ERROR */}
+          {error && (
+            <div className="import-error" role="alert">
+              <AlertCircle size={17} />
+              <span>{error}</span>
             </div>
           )}
 
-        </div>
-      )}
+          {/* PREVIEW */}
+          <button
+            type="button"
+            className="preview-button"
+            onClick={handlePreview}
+            disabled={!file || loading || importing}
+          >
+            {loading ? (
+              <>
+                <span className="button-spinner" />
+                Processing File...
+              </>
+            ) : (
+              <>
+                <FileSpreadsheet size={18} />
+                Preview and Validate
+              </>
+            )}
+          </button>
+        </section>
 
-    </div>
+        {/* PREVIEW CARD */}
+        {result && (
+          <section className="preview-card">
+            <div className="preview-header">
+              <div>
+                <div className="import-kicker">
+                  STEP 3 / REVIEW
+                </div>
+
+                <h2>Review {config.entityPlural}</h2>
+
+                <p>{result.file?.name || file?.name}</p>
+              </div>
+
+              <div
+                className={`preview-status ${
+                  result.summary?.valid
+                    ? "valid"
+                    : "invalid"
+                }`}
+              >
+                {result.summary?.valid ? (
+                  <>
+                    <CheckCircle2 size={16} />
+                    Ready to Import
+                  </>
+                ) : (
+                  <>
+                    <AlertCircle size={16} />
+                    Needs Correction
+                  </>
+                )}
+              </div>
+            </div>
+
+            <div className="summary-grid">
+              <div className="summary-item">
+                <span>Total Records</span>
+                <strong>
+                  {result.summary?.totalRows ?? 0}
+                </strong>
+              </div>
+
+              <div className="summary-item">
+                <span>Preview Rows</span>
+                <strong>
+                  {result.summary?.previewRows ?? 0}
+                </strong>
+              </div>
+
+              <div
+                className={`summary-item ${
+                  (result.summary?.errorCount ?? 0) > 0
+                    ? "has-errors"
+                    : "no-errors"
+                }`}
+              >
+                <span>Validation Errors</span>
+                <strong>
+                  {result.summary?.errorCount ?? 0}
+                </strong>
+              </div>
+            </div>
+
+            {result.errors?.length > 0 && (
+              <div className="validation-box validation-errors">
+                <h3>
+                  <AlertCircle size={17} />
+                  Validation errors
+                </h3>
+
+                <ul>
+                  {result.errors.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {result.warnings?.length > 0 && (
+              <div className="validation-box validation-warnings">
+                <h3>
+                  <AlertCircle size={17} />
+                  Review warnings
+                </h3>
+
+                <ul>
+                  {result.warnings.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {result.preview?.length > 0 && (
+              <div className="preview-table-wrapper">
+                <table className="preview-table">
+                  <thead>
+                    <tr>
+                      {result.columns?.map((column) => (
+                        <th key={column}>{column}</th>
+                      ))}
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {result.preview.map((row, rowIndex) => (
+                      <tr key={rowIndex}>
+                        {result.columns?.map((column) => (
+                          <td key={column}>
+                            {String(row[column] ?? "")}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {result.summary?.valid && !importResult && (
+              <button
+                type="button"
+                className="confirm-button"
+                onClick={handleConfirmImport}
+                disabled={importing}
+              >
+                {importing ? (
+                  <>
+                    <span className="button-spinner" />
+                    Importing Records...
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 size={18} />
+                    Confirm Import —{" "}
+                    {result.summary?.totalRows ?? 0} Records
+                  </>
+                )}
+              </button>
+            )}
+
+            {importResult && (
+              <div className="import-success">
+                <div className="success-icon">
+                  <CheckCircle2 size={28} />
+                </div>
+
+                <div className="import-kicker">
+                  IMPORT COMPLETE
+                </div>
+
+                <h3>
+                  {config.shortTitle} imported successfully
+                </h3>
+
+                <p>
+                  {importResult.message ||
+                    `Your ${config.entityPlural} were imported successfully.`}
+                </p>
+
+                {importResult.summary && (
+                  <div className="success-summary">
+                    <div className="success-stat">
+                      <span>Imported</span>
+                      <strong>
+                        {importResult.summary.imported ?? 0}
+                      </strong>
+                    </div>
+
+                    <div className="success-stat">
+                      <span>Skipped</span>
+                      <strong>
+                        {importResult.summary.skipped ?? 0}
+                      </strong>
+                    </div>
+                  </div>
+                )}
+
+                <div className="success-actions">
+                  <button
+                    type="button"
+                    className="dashboard-button"
+                    onClick={() => navigate(backPath)}
+                  >
+                    View {config.shortTitle}
+                  </button>
+
+                  <button
+                    type="button"
+                    className="import-more-button"
+                    onClick={() => {
+                      setFile(null);
+                      setResult(null);
+                      setImportResult(null);
+                      setError("");
+
+                      if (fileInputRef.current) {
+                        fileInputRef.current.value = "";
+                      }
+                    }}
+                  >
+                    Import More
+                  </button>
+                </div>
+              </div>
+            )}
+          </section>
+        )}
+      </div>
+    </main>
   );
 };
 

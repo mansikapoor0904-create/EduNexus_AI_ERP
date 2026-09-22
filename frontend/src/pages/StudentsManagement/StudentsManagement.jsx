@@ -448,16 +448,16 @@ const StudentsManagement = () => {
             ← Back to Dashboard
           </button>
 
-          <h1>Students</h1>
+          <h1>STUDENT INFORMATION </h1>
 
           <p>
-            Manage student records, profiles and account status.
+            Centralized repository for enrollment records, academic standing, and account provisioning across all departments.
           </p>
         </div>
 
         <button
           className="add-student-button"
-          onClick={() => navigate("/management/import")}
+          onClick={() => navigate("/management/import?type=student")}
         >
           + Add / Import Students
         </button>

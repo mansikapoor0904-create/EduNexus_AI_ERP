@@ -1,186 +1,72 @@
-/* =========================
-   FOOTER
-========================= */
-
 .footer {
   margin-top: 80px;
 
   background: #303b34;
-
   color: #e8ebe5;
 }
 
-
-/* =========================
-   MAIN CONTAINER
-========================= */
-
 .footer-container {
   max-width: 1200px;
-
   margin: 0 auto;
 
-  padding: 65px 24px 55px;
+  padding: 60px 24px 45px;
 
   display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.4fr;
 
-  grid-template-columns:
-    2fr
-    1fr
-    1fr
-    1.2fr
-    1fr;
-
-  gap: 38px;
+  gap: 45px;
 }
-
-
-/* =========================
-   BRAND
-========================= */
 
 .footer-brand {
   display: flex;
-
-  flex-direction: column;
-
-  align-items: flex-start;
-}
-
-.footer-brand-top {
-  display: flex;
-
-  align-items: center;
-
-  gap: 13px;
-
-  margin-bottom: 17px;
+  gap: 14px;
 }
 
 .footer-logo {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
 
   display: flex;
-
   align-items: center;
   justify-content: center;
 
-  border-radius: 12px;
+  border-radius: 11px;
 
   background: #75836d;
 
-  color: #ffffff;
-
   font-weight: 800;
-
   font-size: 21px;
-
-  box-shadow:
-    0 6px 18px rgba(0, 0, 0, 0.12);
 }
 
 .footer-brand h3 {
-  margin: 0 0 4px;
-
-  color: #ffffff;
+  margin: 0 0 10px;
 
   font-size: 20px;
-
-  letter-spacing: -0.3px;
 }
 
-.footer-tagline {
-  display: block;
-
-  color: #aeb8ae;
-
-  font-size: 10px;
-
-  letter-spacing: 0.4px;
-}
-
-.footer-description {
-  max-width: 315px;
+.footer-brand p {
+  max-width: 300px;
 
   margin: 0;
 
   color: #b9c0b8;
 
-  line-height: 1.7;
-
-  font-size: 13px;
+  line-height: 1.6;
 }
-
-
-/* =========================
-   REQUEST DEMO BUTTON
-========================= */
-
-.footer-demo-btn {
-  margin-top: 22px;
-
-  display: inline-flex;
-
-  align-items: center;
-
-  gap: 8px;
-
-  padding: 10px 14px;
-
-  border: 1px solid rgba(255, 255, 255, 0.16);
-
-  border-radius: 9px;
-
-  background: rgba(255, 255, 255, 0.07);
-
-  color: #ffffff;
-
-  text-decoration: none;
-
-  font-size: 12px;
-
-  font-weight: 700;
-
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.footer-demo-btn:hover {
-  background: rgba(255, 255, 255, 0.13);
-
-  border-color: rgba(255, 255, 255, 0.25);
-
-  transform: translateY(-1px);
-}
-
-
-/* =========================
-   FOOTER COLUMNS
-========================= */
 
 .footer-column {
   display: flex;
-
   flex-direction: column;
 
-  align-items: flex-start;
-
-  gap: 11px;
+  gap: 10px;
 }
 
 .footer-column h4 {
-  margin: 0 0 9px;
+  margin: 0 0 8px;
 
   color: #ffffff;
 
-  font-size: 13px;
-
-  font-weight: 700;
-
-  letter-spacing: 0.2px;
+  font-size: 14px;
 }
 
 .footer-column a,
@@ -189,195 +75,44 @@
 
   text-decoration: none;
 
-  font-size: 12px;
+  font-size: 13px;
 
-  line-height: 1.4;
-
-  transition:
-    color 0.2s ease,
-    transform 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 .footer-column a:hover {
   color: #ffffff;
-
-  transform: translateX(2px);
 }
-
-.footer-column span {
-  cursor: default;
-}
-
-
-/* =========================
-   RESOURCES
-========================= */
-
-.footer-resources {
-  min-width: 0;
-}
-
-
-/* =========================
-   FOOTER BOTTOM
-========================= */
 
 .footer-bottom {
   max-width: 1200px;
-
-  margin: 0 auto;
+  margin: auto;
 
   padding: 20px 24px;
 
   display: flex;
-
-  align-items: center;
-
   justify-content: space-between;
-
-  gap: 20px;
 
   border-top: 1px solid #4b554e;
 
   color: #aeb5ad;
 
-  font-size: 11px;
+  font-size: 12px;
 }
 
-.footer-bottom p {
-  margin: 0;
-}
-
-.footer-bottom-left {
-  display: flex;
-
-  align-items: center;
-}
-
-.footer-bottom-right {
-  display: flex;
-
-  align-items: center;
-
-  justify-content: flex-end;
-
-  gap: 9px;
-
-  text-align: right;
-}
-
-.footer-divider {
-  color: #68746b;
-}
-
-.footer-secure {
-  display: flex;
-
-  align-items: center;
-
-  gap: 5px;
-
-  color: #aeb5ad;
-}
-
-.footer-secure svg {
-  color: #819584;
-}
-
-
-/* =========================
-   TABLET
-========================= */
-
-@media (max-width: 1050px) {
-
-  .footer-container {
-    grid-template-columns:
-      1.5fr
-      1fr
-      1fr
-      1fr;
-
-    gap: 35px;
-  }
-
-  .footer-brand {
-    grid-column: span 4;
-  }
-
-  .footer-description {
-    max-width: 500px;
-  }
-}
-
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 700px) {
-
+@media (max-width: 800px) {
   .footer-container {
     grid-template-columns: 1fr 1fr;
-
-    padding: 50px 24px 40px;
-
-    gap: 35px 25px;
-  }
-
-  .footer-brand {
-    grid-column: span 2;
   }
 
   .footer-bottom {
     flex-direction: column;
-
-    align-items: flex-start;
-
-    padding: 18px 24px;
-
-    gap: 9px;
-  }
-
-  .footer-bottom-right {
-    justify-content: flex-start;
-
-    flex-wrap: wrap;
-
-    text-align: left;
+    gap: 8px;
   }
 }
 
-
-/* =========================
-   SMALL MOBILE
-========================= */
-
-@media (max-width: 480px) {
-
+@media (max-width: 550px) {
   .footer-container {
     grid-template-columns: 1fr;
-
-    padding: 45px 20px 35px;
-  }
-
-  .footer-brand {
-    grid-column: span 1;
-  }
-
-  .footer-bottom {
-    padding: 18px 20px;
-  }
-
-  .footer-bottom-right {
-    align-items: flex-start;
-
-    flex-direction: column;
-
-    gap: 5px;
-  }
-
-  .footer-divider {
-    display: none;
   }
 }

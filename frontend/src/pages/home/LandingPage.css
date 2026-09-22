@@ -102,7 +102,7 @@ img {
 .landing-hero {
   position: relative;
 
-  min-height: 100vh;
+  min-height: auto;
 
   overflow: hidden;
 
@@ -216,7 +216,7 @@ img {
 
   width: min(1500px, 94%);
 
-  min-height: 100vh;
+  min-height: auto;
 
   margin: auto;
 
@@ -567,7 +567,7 @@ img {
     100%;
 
   height:
-    790px;
+    700px;
 
   perspective:
     1800px;
@@ -580,6 +580,7 @@ img {
 
   isolation:
     isolate;
+  margin-bottom: -30px;
 }
 
 
@@ -905,10 +906,10 @@ img {
     absolute;
 
   width:
-    205px;
+    200px;
 
   height:
-    190px;
+    170px;
 
   padding:
     19px;
@@ -1044,6 +1045,8 @@ img {
 
   font-weight:
     700;
+
+  align-items: center;
 
   letter-spacing:
     0.08em;
@@ -1231,10 +1234,10 @@ img {
 
 .card-one {
   left:
-    2%;
+    10%;
 
   top:
-    25%;
+    20%;
 
   z-index:
     12;
@@ -1254,7 +1257,7 @@ img {
     50%;
 
   top:
-    6%;
+    10%;
 
   margin-left:
     -102.5px;
@@ -1274,7 +1277,7 @@ img {
 
 .card-three {
   right:
-    2%;
+    10%;
 
   top:
     25%;
@@ -1294,10 +1297,10 @@ img {
 
 .card-four {
   right:
-    2%;
+    10%;
 
   bottom:
-    8%;
+    20%;
 
   z-index:
     12;
@@ -1317,7 +1320,7 @@ img {
     50%;
 
   bottom:
-    4%;
+    10%;
 
   margin-left:
     -102.5px;
@@ -1337,10 +1340,10 @@ img {
 
 .card-six {
   left:
-    2%;
+    10%;
 
   bottom:
-    8%;
+    20%;
 
   z-index:
     12;
@@ -2366,7 +2369,7 @@ img {
       15px;
 
     margin-bottom:
-      -30px;
+      30px;
 
     transform:
       none;
