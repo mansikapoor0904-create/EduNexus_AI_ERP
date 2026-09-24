@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import {
   GraduationCap,
@@ -25,71 +24,118 @@ import {
 } from "lucide-react";
 
 import { useNavigate } from "react-router-dom";
+import { getAccessToken } from "../../services/authService";
 import "./ManagementDashboard.css";
+
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 function ManagementDashboard() {
   const navigate = useNavigate();
 
   // ─── State ───────────────────────────────────────────
-  const [importedData, setImportedData]     = useState({ students: [], faculty: [] });
-  const [isFirstTime, setIsFirstTime]       = useState(false);
-  const [activeNav, setActiveNav]           = useState("overview");
-  const [notification, setNotification]     = useState(3);
+  const [stats, setStats]                     = useState(null);
+  const [previewStudents, setPreviewStudents] = useState([]);
+  const [previewFaculty, setPreviewFaculty]   = useState([]);
+  const [isFirstTime, setIsFirstTime]         = useState(false);
+  const [activeNav, setActiveNav]             = useState("overview");
+  const [notification, setNotification]       = useState(3);
+  const [loadingStats, setLoadingStats]       = useState(true);
 
-  // ─── Load data from localStorage ─────────────────────
+  // ─── Load dashboard stats from DB ────────────────────
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem("importedData");
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        setImportedData({
-          students: parsed.students || [],
-          faculty:  parsed.faculty  || [],
+    const fetchStats = async () => {
+      try {
+        const token = getAccessToken();
+        if (!token) {
+          setIsFirstTime(true);
+          return;
+        }
+
+        const res = await fetch(`${API_BASE_URL}/management/dashboard`, {
+          headers: { Authorization: `Bearer ${token}` },
+          credentials: "include",
         });
-        setIsFirstTime(false);
-      } else {
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.message || "Failed to load stats");
+        }
+
+        setStats(data.data);
+        setIsFirstTime(
+          data.data.totalStudents === 0 && data.data.totalFaculty === 0
+        );
+      } catch (err) {
+        console.error("Dashboard fetch error:", err);
         setIsFirstTime(true);
+      } finally {
+        setLoadingStats(false);
       }
-    } catch {
-      setIsFirstTime(true);
-    }
+    };
+
+    fetchStats();
   }, []);
 
-  // ─── Derived stats ────────────────────────────────────
-  const totalStudents  = importedData.students.length;
-  const totalFaculty   = importedData.faculty.length;
+  // ─── Load preview records (first few students + faculty) ─
+  useEffect(() => {
+    const fetchPreview = async () => {
+      try {
+        const token = getAccessToken();
+        if (!token) return;
+
+        const headers = { Authorization: `Bearer ${token}` };
+
+        const [sRes, fRes] = await Promise.all([
+          fetch(`${API_BASE_URL}/management/students`, {
+            headers,
+            credentials: "include",
+          }),
+          fetch(`${API_BASE_URL}/management/faculty`, {
+            headers,
+            credentials: "include",
+          }),
+        ]);
+
+        if (sRes.ok) {
+          const sData = await sRes.json();
+          setPreviewStudents((sData.students || []).slice(0, 4));
+        }
+
+        if (fRes.ok) {
+          const fData = await fRes.json();
+          setPreviewFaculty((fData.faculty || []).slice(0, 2));
+        }
+      } catch (err) {
+        console.error("Dashboard preview fetch error:", err);
+      }
+    };
+
+    fetchPreview();
+  }, []);
+
+  // ─── Derived stats (from backend) ─────────────────────
+  const totalStudents  = stats?.totalStudents  ?? 0;
+  const totalFaculty   = stats?.totalFaculty   ?? 0;
+  const activeStudents = stats?.activeStudents ?? 0;
+  const activeFaculty  = stats?.activeFaculty  ?? 0;
   const hasData        = totalStudents > 0 || totalFaculty > 0;
 
-  // Compute department breakdown from students
-  const deptMap = {};
-  importedData.students.forEach((s) => {
-    const dept = s.department || s.dept || s.Department || "Other";
-    deptMap[dept] = (deptMap[dept] || 0) + 1;
-  });
-  const departments  = Object.keys(deptMap);
-  const deptCounts   = Object.values(deptMap);
+  // Department breakdown comes from the API
+  const departmentBreakdown = stats?.departmentBreakdown ?? [];
+  const departments  = departmentBreakdown.map((d) => d.department);
+  const deptCounts   = departmentBreakdown.map((d) => d.count);
   const maxDeptCount = Math.max(...deptCounts, 1);
 
-  // Monthly enrollment from students (use joiningYear or batch)
-  const monthLabels = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  // Monthly enrollment chart — placeholder until we add it to the API
+  const monthLabels   = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   const monthlyCounts = Array(12).fill(0);
-  importedData.students.forEach((s) => {
-    const raw = s.joiningDate || s.joining_date || s.admissionDate || s.createdAt;
-    if (raw) {
-      const m = new Date(raw).getMonth();
-      if (!isNaN(m)) monthlyCounts[m]++;
-    }
-  });
-  const nonZeroMonths = monthlyCounts.filter(Boolean);
-  const maxMonthly    = Math.max(...nonZeroMonths, 1);
+  const maxMonthly    = 1;
 
-  // Attendance average
-  const attArr = importedData.students
-    .map((s) => parseFloat(s.attendance || s.attendancePercent || 0))
-    .filter((n) => n > 0);
-  const avgAttendance = attArr.length
-    ? (attArr.reduce((a, b) => a + b, 0) / attArr.length).toFixed(1)
-    : "—";
+  // Attendance module not built yet — real value comes later
+  const attArr        = [];
+  const avgAttendance = "—";
 
   // ─── Nav handlers ─────────────────────────────────────
   const handleLogout     = () => navigate("/login");
@@ -138,7 +184,7 @@ function ManagementDashboard() {
     {
       id: 1,
       title: hasData ? `${totalStudents} student records loaded` : "No student records yet",
-      desc:  hasData ? "Imported from CSV/XLSX file" : "Import a CSV to get started",
+      desc:  hasData ? "Loaded from database" : "Import a CSV to get started",
       icon:  GraduationCap,
       time:  "Today",
       status: hasData ? "success" : "warn",
@@ -146,7 +192,7 @@ function ManagementDashboard() {
     {
       id: 2,
       title: hasData ? `${totalFaculty} faculty records loaded` : "No faculty records yet",
-      desc:  hasData ? "Imported from CSV/XLSX file" : "Import a CSV to get started",
+      desc:  hasData ? "Loaded from database" : "Import a CSV to get started",
       icon:  UserRoundCheck,
       time:  "Today",
       status: hasData ? "success" : "warn",
@@ -313,10 +359,10 @@ function ManagementDashboard() {
               </div>
               <span className="md-stat-label">TOTAL STUDENTS</span>
               <strong className="md-stat-value">
-                {hasData ? totalStudents.toLocaleString() : "—"}
+                {loadingStats ? "…" : totalStudents.toLocaleString()}
               </strong>
               <p className="md-stat-foot">
-                {hasData ? "From imported CSV/XLSX" : "Import a CSV to see data"}
+                {hasData ? `${activeStudents} active` : "Import a CSV to see data"}
               </p>
             </div>
 
@@ -332,10 +378,10 @@ function ManagementDashboard() {
               </div>
               <span className="md-stat-label">TOTAL FACULTY</span>
               <strong className="md-stat-value">
-                {hasData ? totalFaculty.toLocaleString() : "—"}
+                {loadingStats ? "…" : totalFaculty.toLocaleString()}
               </strong>
               <p className="md-stat-foot">
-                {hasData ? "From imported CSV/XLSX" : "Import a CSV to see data"}
+                {hasData ? `${activeFaculty} active` : "Import a CSV to see data"}
               </p>
             </div>
 
@@ -354,7 +400,7 @@ function ManagementDashboard() {
                 {attArr.length ? `${avgAttendance}%` : "—"}
               </strong>
               <p className="md-stat-foot">
-                {attArr.length ? "Calculated from student records" : "Include attendance column in CSV"}
+                Attendance module coming soon
               </p>
             </div>
 
@@ -370,7 +416,7 @@ function ManagementDashboard() {
               </div>
               <span className="md-stat-label">DEPARTMENTS</span>
               <strong className="md-stat-value">
-                {departments.length || "—"}
+                {loadingStats ? "…" : (departments.length || 0)}
               </strong>
               <p className="md-stat-foot">
                 {departments.length ? "Across all students" : "Include department column in CSV"}
@@ -435,7 +481,9 @@ function ManagementDashboard() {
               {departments.length > 0 ? (
                 <div className="md-dept-list">
                   {departments.slice(0, 7).map((dept, idx) => {
-                    const pct = ((deptCounts[idx] / totalStudents) * 100).toFixed(1);
+                    const pct = totalStudents
+                      ? ((deptCounts[idx] / totalStudents) * 100).toFixed(1)
+                      : "0.0";
                     return (
                       <div key={dept} className="md-dept-row">
                         <span className="md-dept-name">{dept}</span>
@@ -529,7 +577,7 @@ function ManagementDashboard() {
             </div>
           </div>
 
-          {/* Data Preview / Management can edit faculty */}
+          {/* Data Preview */}
           <div className="md-card">
             <div className="md-card-header">
               <div>
@@ -549,36 +597,30 @@ function ManagementDashboard() {
 
             {hasData ? (
               <div className="md-preview-list">
-                {importedData.students.slice(0, 4).map((s, i) => (
+                {previewStudents.map((s, i) => (
                   <div key={i} className="md-preview-row">
                     <div className="md-preview-avatar">
-                      {(s.name || s.Name || s.studentName || "S")[0].toUpperCase()}
+                      {String(s.name || s.student_id || "S").charAt(0).toUpperCase()}
                     </div>
                     <div className="md-preview-info">
-                      <strong>
-                        {s.name || s.Name || s.studentName || `Student ${i + 1}`}
-                      </strong>
+                      <strong>{s.name || `Student ${i + 1}`}</strong>
                       <span>
-                        {s.department || s.dept || s.Department || "—"} ·{" "}
-                        {s.rollNo || s.roll_no || s.rollNumber || s.id || "—"}
+                        {s.department || "—"} · {s.student_id || "—"}
                       </span>
                     </div>
                     <span className="md-preview-tag">Student</span>
                   </div>
                 ))}
 
-                {importedData.faculty.slice(0, 2).map((f, i) => (
+                {previewFaculty.map((f, i) => (
                   <div key={`f-${i}`} className="md-preview-row">
                     <div className="md-preview-avatar md-avatar-green">
-                      {(f.name || f.Name || f.facultyName || "F")[0].toUpperCase()}
+                      {String(f.name || f.employee_id || "F").charAt(0).toUpperCase()}
                     </div>
                     <div className="md-preview-info">
-                      <strong>
-                        {f.name || f.Name || f.facultyName || `Faculty ${i + 1}`}
-                      </strong>
+                      <strong>{f.name || `Faculty ${i + 1}`}</strong>
                       <span>
-                        {f.department || f.dept || f.Department || "—"} ·{" "}
-                        {f.employeeId || f.emp_id || f.id || "—"}
+                        {f.department || "—"} · {f.employee_id || "—"}
                       </span>
                     </div>
                     <span className="md-preview-tag md-tag-green">Faculty</span>

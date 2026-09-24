@@ -107,21 +107,21 @@ function LandingPage() {
 
             <h1>
               One Intelligent
-              <br />
+              
 
               <span>Platform</span>
 
               <br />
 
               for the Entire
-              <br />
+              
 
               College.
             </h1>
 
             <h2>
               From Student Admission
-              <br />
+             
               to Alumni Success
             </h2>
 
@@ -156,42 +156,6 @@ function LandingPage() {
               </Link>
 
             </div>
-
-
-            {/* ================= STATS ================= */}
-
-            <div className="hero-stats">
-
-              <div>
-                <strong>
-                  {counts.students.toLocaleString()}+
-                </strong>
-
-                <span>Students</span>
-              </div>
-
-              <div className="stat-divider" />
-
-              <div>
-                <strong>
-                  {counts.attendance}%
-                </strong>
-
-                <span>Attendance</span>
-              </div>
-
-              <div className="stat-divider" />
-
-              <div>
-                <strong>
-                  {counts.modules}+
-                </strong>
-
-                <span>ERP Modules</span>
-              </div>
-
-            </div>
-
           </div>
 
 
@@ -230,15 +194,13 @@ function LandingPage() {
 
                 <div className="orb-inner">
 
-                  <small>EDU</small>
+                  <h6>EDU</h6>
 
                   <strong>
                     NEXUS
                   </strong>
 
-                  <span>
-                    AI ERP
-                  </span>
+                 
 
                 </div>
 
@@ -256,9 +218,7 @@ function LandingPage() {
                 </div>
 
                 <h3>
-                  Student
-                  <br />
-                  Management
+                  Student Management
                 </h3>
 
                 <div className="card-line" />
@@ -370,6 +330,7 @@ function LandingPage() {
                 <h3>
                   AI Career
                 </h3>
+                
 
                 <div className="card-line" />
 

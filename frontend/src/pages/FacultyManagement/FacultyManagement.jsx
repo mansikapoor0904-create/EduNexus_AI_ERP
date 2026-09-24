@@ -192,13 +192,22 @@ const FacultyManagement = () => {
   /* =======================================================
      FETCH FACULTY
   ======================================================= */
-
- const fetchFaculty = async () => {
+const fetchFaculty = async () => {
   try {
     setLoading(true);
     setError("");
 
-    const response = await fetch("http://localhost:5000/api/faculty");
+    const token = getAccessToken();
+
+    if (!token) {
+      throw new Error("Your session has expired. Please log in again.");
+    }
+
+    const response = await fetch(`${API_BASE_URL}/management/faculty`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+      credentials: "include",
+    });
 
     const data = await response.json();
 
@@ -211,7 +220,6 @@ const FacultyManagement = () => {
       : data.faculty || data.data || [];
 
     setFaculty(facultyList);
-
   } catch (error) {
     console.error("Faculty Error:", error);
     setError(error.message);

@@ -21,6 +21,9 @@ import ManagementImport from "./pages/ManagementImport/ManagementImport";
 import StudentsManagement from "./pages/StudentsManagement/StudentsManagement";
 import FacultyManagement from "./pages/FacultyManagement/FacultyManagement";
 
+
+import StudentDashboard from "./pages/StudentDashboard/StudentDashboard";
+
 import "./App.css";
 
 
@@ -31,20 +34,12 @@ import "./App.css";
 function AboutPage() {
   return (
     <main className="simple-page">
-
       <span>ABOUT EDUNEXUS</span>
-
-      <h1>
-        An intelligent operating system
-        for modern colleges.
-      </h1>
-
+      <h1>An intelligent operating system for modern colleges.</h1>
       <p>
-        EduNexus AI ERP connects academic,
-        administrative and career workflows
+        EduNexus AI ERP connects academic, administrative and career workflows
         into one unified education platform.
       </p>
-
     </main>
   );
 }
@@ -57,18 +52,11 @@ function AboutPage() {
 function PricingPage() {
   return (
     <main className="simple-page">
-
       <span>EDUNEXUS PRICING</span>
-
-      <h1>
-        Simple and flexible plans.
-      </h1>
-
+      <h1>Simple and flexible plans.</h1>
       <p>
-        Flexible plans designed for students,
-        institutions and educational organizations.
+        Flexible plans designed for students, institutions and educational organizations.
       </p>
-
     </main>
   );
 }
@@ -100,163 +88,85 @@ function App() {
     <div className="app">
 
       {/* NAVBAR */}
-
       {!hideNavbar && <Navbar />}
 
-
       {/* ROUTES */}
-
       <Routes>
 
         {/* -------------------------------- */}
-        {/* HOME */}
+        {/* HOME                             */}
         {/* -------------------------------- */}
-
-        <Route
-          path="/"
-          element={<LandingPage />}
-        />
-
+        <Route path="/" element={<LandingPage />} />
 
         {/* -------------------------------- */}
-        {/* FEATURES */}
+        {/* FEATURES                         */}
         {/* -------------------------------- */}
-
-        <Route
-          path="/features"
-          element={<FeaturesPage />}
-        />
-
+        <Route path="/features" element={<FeaturesPage />} />
 
         {/* -------------------------------- */}
-        {/* GENERAL DASHBOARD */}
+        {/* GENERAL DASHBOARD                */}
         {/* -------------------------------- */}
-
-        <Route
-          path="/dashboard"
-          element={<DashboardPage />}
-        />
-
+        <Route path="/dashboard" element={<DashboardPage />} />
 
         {/* -------------------------------- */}
-        {/* MANAGEMENT */}
+        {/* MANAGEMENT                       */}
         {/* -------------------------------- */}
+        <Route path="/management/dashboard" element={<ManagementDashboard />} />
+        <Route path="/management/students" element={<StudentsManagement />} />
+        <Route path="/management/faculty" element={<FacultyManagement />} />
+        <Route path="/management/import" element={<ManagementImport />} />
 
-        <Route
-          path="/management/dashboard"
-          element={<ManagementDashboard />}
-        />
-
-        <Route
-          path="/management/students"
-          element={<StudentsManagement />}
-        />
-
-        <Route
-          path="/management/faculty"
-          element={<FacultyManagement />}
-        />
-
-        <Route
-          path="/management/import"
-          element={<ManagementImport />}
-        />
-
+        {/* 👇 NEW STUDENT DASHBOARD ROUTE ADDED HERE 👇 */}
+        <Route path="/student/dashboard" element={<StudentDashboard />} />
 
         {/* -------------------------------- */}
-        {/* LOGIN */}
+        {/* LOGIN                            */}
         {/* -------------------------------- */}
-
-        <Route
-          path="/login"
-          element={<LoginPage />}
-        />
-
+        <Route path="/login" element={<LoginPage />} />
 
         {/* -------------------------------- */}
-        {/* GET STARTED */}
+        {/* GET STARTED                      */}
         {/* -------------------------------- */}
-
-        <Route
-          path="/get-started"
-          element={<GetStartedPage />}
-        />
-
+        <Route path="/get-started" element={<GetStartedPage />} />
 
         {/* -------------------------------- */}
-        {/* STUDENT SIGNUP */}
+        {/* STUDENT SIGNUP                   */}
         {/* -------------------------------- */}
-
-        <Route
-          path="/signup/student"
-          element={<StudentSignupPage />}
-        />
-
+        <Route path="/signup/student" element={<StudentSignupPage />} />
 
         {/* -------------------------------- */}
-        {/* FACULTY */}
+        {/* FACULTY                          */}
         {/* -------------------------------- */}
-
-        <Route
-          path="/faculty-invitation"
-          element={<FacultyInvitationPage />}
-        />
-
+        <Route path="/faculty-invitation" element={<FacultyInvitationPage />} />
 
         {/* -------------------------------- */}
-        {/* MANAGEMENT ACCESS */}
+        {/* MANAGEMENT ACCESS                */}
         {/* -------------------------------- */}
-
-        <Route
-          path="/management-access"
-          element={<ManagementAccessRequestPage />}
-        />
-
+        <Route path="/management-access" element={<ManagementAccessRequestPage />} />
 
         {/* -------------------------------- */}
-        {/* REQUEST DEMO */}
+        {/* REQUEST DEMO                     */}
         {/* -------------------------------- */}
-
-        <Route
-          path="/request-demo"
-          element={<RequestDemoPage />}
-        />
-
+        <Route path="/request-demo" element={<RequestDemoPage />} />
 
         {/* -------------------------------- */}
-        {/* ABOUT */}
+        {/* ABOUT                            */}
         {/* -------------------------------- */}
-
-        <Route
-          path="/about"
-          element={<AboutPage />}
-        />
-
+        <Route path="/about" element={<AboutPage />} />
 
         {/* -------------------------------- */}
-        {/* PRICING */}
+        {/* PRICING                          */}
         {/* -------------------------------- */}
-
-        <Route
-          path="/pricing"
-          element={<PricingPage />}
-        />
-
+        <Route path="/pricing" element={<PricingPage />} />
 
         {/* -------------------------------- */}
-        {/* UNKNOWN URL */}
+        {/* UNKNOWN URL                      */}
         {/* -------------------------------- */}
-
-        <Route
-          path="*"
-          element={<Navigate to="/" replace />}
-        />
+        <Route path="*" element={<Navigate to="/" replace />} />
 
       </Routes>
 
-
       {/* FOOTER */}
-
       {!hideFooter && <Footer />}
 
     </div>

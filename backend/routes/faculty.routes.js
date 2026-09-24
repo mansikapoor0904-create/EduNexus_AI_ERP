@@ -4,6 +4,7 @@ const {
   getFaculty,
   getFacultyById,
   updateFaculty,
+  updateFacultyStatus,
 } = require("../controllers/faculty.controller");
 
 const {
